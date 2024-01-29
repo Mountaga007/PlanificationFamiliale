@@ -113,18 +113,6 @@ class PersonnelSanteController extends Controller
             'nom_structure' => $request->nom_structure,
         ]);
 
-        // if ($personnelSante) {
-        //     return response()->json([
-        //         "message" => "Personnel de santé créé avec succès",
-        //     ], 200);
-        // } else {
-        //     // En cas d'échec, supprimer l'utilisateur précédemment créé
-        //     $user->delete();
-
-        //     return response()->json([
-        //         "message" => "Personnel de santé non enregistré",
-        //     ], 500);
-        // }
 
         if ($personnelSante) {
             return response()->json([
@@ -141,40 +129,6 @@ class PersonnelSanteController extends Controller
             ], 500);
         }
     }
-
-//     //Valider l'inscription du personnel de santé par l'admin
-//     public function approveAccount(Request $request, $id)
-// {
-//     $personnelSante = PersonnelSante::findOrFail($id);
-//     $personnelSante->update(['validated' => true]);
-
-//     return response()->json([
-//         "message" => "Compte personnel de santé approuvé avec succès",
-//     ], 200);
-// }
-
-//     //Valider l'inscription du personnel de santé
-//     public function validercompte(Request $request, $id)
-// {
-//     $personnelSante = PersonnelSante::findOrFail($id);
-//     $personnelSante->update(['statut_compte' => true]);
-
-//     return response()->json([
-//         "message" => "Inscription approuvée avec succès",
-//     ], 200);
-// }
-
-// public function invalidercompte(Request $request, $id)
-// {
-//     $personnelSante = PersonnelSante::findOrFail($id);
-//     $personnelSante->update(['statut_compte' => false]);
-
-//     return response()->json([
-//         "message" => "Inscription invalidée avec succès",
-//     ], 200);
-// }
-
-
 
     /**
      * Display the specified resource.

@@ -6,7 +6,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\CalculPeriodeOvulation;
+use App\Http\Controllers\InformationPlanificationFamilialeController;
 use App\Http\Controllers\PersonnelSanteController;
+use App\Http\Controllers\RessourcePlanificationFamilialeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +41,12 @@ Route::group([
 
 Route::post('create_utilisateur', [UtilisateurController::class,'store']);
 Route::post('/create-personnelsante', [PersonnelSanteController::class, 'store'])->name('store');
+Route::get('liste_ressource', [RessourcePlanificationFamilialeController::class, 'index']);
+Route::get('liste_information', [InformationPlanificationFamilialeController::class, 'index']);
+
+
+
+
 
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::get('liste_personnelsante', [PersonnelSanteController::class, 'index'])->name('liste_invalide');
@@ -46,4 +54,7 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::get('liste_utilisateur', [UtilisateurController::class, 'index']);
     Route::put('valider/{id}', [AdminController::class, 'validerInscription']); // Valider l'inscription
     Route::put('invalider/{id}', [AdminController::class, 'invaliderInscription']); // Invalider l'inscription
+    Route::post('create-ressource', [RessourcePlanificationFamilialeController::class, 'store']);
+    Route::post('create-information', [InformationPlanificationFamilialeController::class, 'store']);
+
 });

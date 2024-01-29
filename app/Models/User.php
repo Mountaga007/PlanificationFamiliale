@@ -65,8 +65,6 @@ class User extends Authenticatable implements JWTSubject
      }
 
 
-
-
     //ligne ajouter
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
@@ -76,5 +74,16 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function Ressource_PF()
+    {
+        return $this->hasMany(Ressource_Planification_familiale::class);
+    }
+
+    public function Information_PF()
+    {
+        return $this->hasMany(Information_Planification_Familiale::class);
+
     }
 }
