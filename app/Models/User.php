@@ -18,12 +18,11 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'prenom',
         'nom',
-        'telephone',
-        'adresse',
         'email',
         'password',
+        'telephone',
+        'image',
         'role',
         'statut_compte',
     ];
@@ -64,6 +63,10 @@ class User extends Authenticatable implements JWTSubject
          return $this->hasOne(PersonnelSante::class);
      }
 
+     public function dossierMedical()
+    {
+        return $this->hasOne(Dossier_Medical::class);
+    }
 
     //ligne ajouter
     /**
@@ -75,7 +78,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-
+    
     public function Ressource_PF()
     {
         return $this->hasMany(Ressource_Planification_familiale::class);
@@ -86,4 +89,5 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Information_Planification_Familiale::class);
 
     }
+
 }

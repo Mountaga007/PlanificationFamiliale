@@ -13,15 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('prenom');
             $table->string('nom');
-            $table->string('telephone');
-            $table->string('adresse');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('telephone');
+            $table->string('image')->nullable();
             $table->enum('role', ['utilisateur','personnelsante','patiente','admin'])->default('utilisateur');
             $table->boolean('statut_compte')->default(false);
+
+            // $table->unsignedBigInteger('dossier_medical_id');
+            // $table->foreign('dossier_medical_id')->references('id')->on('dossier__medicals')->onDelete('cascade');
+
             $table->rememberToken();
             $table->timestamps();
         });

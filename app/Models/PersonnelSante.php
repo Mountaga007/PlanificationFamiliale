@@ -10,13 +10,18 @@ class PersonnelSante extends Model
     use HasFactory;
 
     protected $fillable = [
-        'specialite',
-        'nom_structure',
-        'user_id'
+        'matricule',
+        'structure',
+        'service'
     ];
 
     public function admin()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function dossiersMedicaux()
+    {
+        return $this->hasMany(Dossier_Medical::class);
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PersonnelSante;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use App\Models\PersonnelSante;
+use App\Http\Requests\storePersonnelSanteRequest;
  
 
 class PersonnelSanteController extends Controller
@@ -80,39 +81,25 @@ class PersonnelSanteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        
-        // Validation des données
-        $request->validate([
-            'prenom' => ['required', 'string', 'min:3', 'max:80'],
-            'nom' => ['required', 'string', 'min:2', 'max:50'],
-            'telephone' => ['required', 'string', 'max:20'],
-            'adresse' => ['required', 'string', 'min:5', 'max:60'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'max:30'],
-            'specialite' => ['required', 'string', 'min:2', 'max:100'],
-            'nom_structure' => ['required','string'],
-        ]);
-        
+    public function store(storePersonnelSanteRequest $request)
+{
 
-        // Création de l'utilisateur
+    try {
+        // Création de l'utilisateur avec le rôle "personnelsante"
         $user = User::create([
-            'prenom' => $request->prenom,
             'nom' => $request->nom,
-            'telephone' => $request->telephone,
-            'adresse' => $request->adresse,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'telephone' => $request->telephone,
             'role' => 'personnelsante',
         ]);
 
         // Création du personnel de santé lié à l'utilisateur
         $personnelSante = $user->personnelSante()->create([
-            'specialite' => $request->specialite,
-            'nom_structure' => $request->nom_structure,
+            'matricule' => $request->matricule,
+            'structure' => $request->structure,
+            'service' => $request->service,
         ]);
-
 
         if ($personnelSante) {
             return response()->json([
@@ -122,13 +109,21 @@ class PersonnelSanteController extends Controller
         } else {
             // En cas d'échec, supprimer l'utilisateur précédemment créé
             $user->delete();
-    
+
             return response()->json([
                 "code_valide" => 500,
                 "message" => "Une erreur s'est produite lors de l'inscription.",
             ], 500);
         }
+    } catch (\Exception $e) {
+        return response()->json([
+            "code_valide" => 500,
+            "message" => "Une erreur s'est produite lors de l'inscription.",
+            "error" => $e->getMessage(),
+        ], 500);
     }
+}
+
 
     /**
      * Display the specified resource.

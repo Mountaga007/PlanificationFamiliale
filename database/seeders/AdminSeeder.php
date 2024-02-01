@@ -13,12 +13,10 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         \App\Models\User::create([
-            'prenom' => 'Mountaga',
-            'nom' => 'Ba',
-            'telephone' => '771663714',
-            'adresse' => 'Patte d\'oie',
+            'nom' => 'Mountaga Ba',
             'email' => 'mountaga889@gmail.com',
             'password' => 'mountaga123',
+            'telephone' => '771663714',
             'role' => 'admin',
          ]);
     }

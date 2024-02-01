@@ -43,32 +43,44 @@ class UtilisateurController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'prenom' => ['required', 'string', 'min:3', 'max:80'],
-            'nom' => ['required', 'string', 'min:2', 'max:50'],
-            'telephone' => ['required', 'string', 'max:20'],
-            'adresse' => ['required', 'string', 'min:5', 'max:60'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'max:30'],
-        ]);
-
-        $utilisateur = new User();
-        $utilisateur -> prenom = $request -> prenom;
-        $utilisateur -> nom = $request -> nom;
-        $utilisateur -> telephone = $request -> telephone;
-        $utilisateur -> adresse = $request -> adresse;
-        $utilisateur -> email = $request -> email;
-        $utilisateur -> password = $request -> password;
-       if($utilisateur -> save()){
         
-        return response()->json([
-            "message" => "Utilisateur créer avec succéss"
-        ], 200);
-       } else{
-        return response()->json([
-            "message" => "Utilisateur non enregistrer"
-        ], 500);
-       }
+        try {
+            $request->validate([
+                'nom' => ['required', 'string', 'min:2', 'max:50'],
+                'email' => ['required', 'email', 'unique:users,email'],
+                'password' => ['required', 'string', 'min:8', 'max:30'],
+                'telephone' => ['required', 'string', 'max:20'],
+                'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
+            ]);
+    
+            $utilisateur = new User();
+            $utilisateur->nom = $request->nom;
+            $utilisateur->email = $request->email;
+            $utilisateur->password = bcrypt($request->password);
+            $utilisateur->telephone = $request->telephone;
+    
+            // Gérer l'upload de l'image
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('images', 'public');
+                $utilisateur->image = $imagePath;
+            }
+    
+            if ($utilisateur->save()) {
+                return response()->json([
+                    'message' => 'Utilisateur créé avec succès',
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'Utilisateur non enregistré',
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            // Gérer les erreurs avec un message approprié
+            return response()->json([
+                'message' => 'Erreur lors de la création de l\'utilisateur.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
 public function redirigerWhatsApp($id)
