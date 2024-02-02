@@ -43,22 +43,43 @@ Route::group([
 
 Route::post('register_utilisateur', [UtilisateurController::class,'store']);
 Route::post('/create_personnelsante', [PersonnelSanteController::class, 'store']);
-Route::get('liste_ressource', [RessourcePlanificationFamilialeController::class, 'index']);
-Route::get('liste_information', [InformationPlanificationFamilialeController::class, 'index']);
-Route::get('detail_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'show']);
 Route::post('envoie_message', [ContacterController::class, 'store']);
-Route::get('liste_message', [ContacterController::class, 'index']);
-Route::delete('supprimer_message/{id}', [ContacterController::class, 'destroy']);
-Route::delete('supprimer_message/{id}', [ContacterController::class, 'destroy']);
-Route::post('whatsapp.patiente/{id}', [ContacterController::class, 'redirigerWhatsApp']);
-Route::post('calculate-ovulation', [CalculPeriodeOvulationController::class, 'calculateOvulation']);
-Route::post('recherche', [DossierMedicalController::class, 'recherche']);
-Route::post('enregistrerDossierMedical/{id}', [DossierMedicalController::class, 'store']);
-Route::get('listetotaleDM', [DossierMedicalController::class, 'index']);
-Route::get('/DetailDM/{dossierMedical}', [DossierMedicalController::class, 'show']);
-Route::put('/updateDM/{id}', [DossierMedicalController::class, 'update']);
 
 
+Route::middleware(['auth:api', 'role:personnelsante'])->group(function () {
+    Route::get('liste_ressource', [RessourcePlanificationFamilialeController::class, 'index']);
+    Route::get('detail_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'show']);
+    Route::post('enregistrerDossierMedical/{id}', [DossierMedicalController::class, 'store']);
+    Route::post('whatsapps.patiente/{id}', [ContacterController::class, 'redirigerWhatsApp']);
+    Route::get('listetotaleDM', [DossierMedicalController::class, 'index']);
+    Route::get('/DetailDM/{dossierMedical}', [DossierMedicalController::class, 'show']);
+    Route::put('/updateDM/{dossier_Medical}', [DossierMedicalController::class, 'update']);
+    Route::post('recherche', [DossierMedicalController::class, 'recherche']);
+    Route::post('archiver', [DossierMedicalController::class, 'destroy']);
+    Route::post('telechargerDM/{id}', [DossierMedicalController::class, 'telechargerDossier']);
+
+    Route::post('calculate-ovulations', [CalculPeriodeOvulationController::class, 'calculateOvulation']);
+    Route::get('liste_informations', [InformationPlanificationFamilialeController::class, 'index']);
+    Route::get('detail_informations/{id}', [InformationPlanificationFamilialeController::class, 'show']);
+
+});
+
+
+Route::middleware(['auth:api', 'role:utilisateur'])->group(function () {
+    Route::post('calculate-ovulation', [CalculPeriodeOvulationController::class, 'calculateOvulation']);
+    Route::get('liste_information', [InformationPlanificationFamilialeController::class, 'index']);
+    Route::get('detail_information/{id}', [InformationPlanificationFamilialeController::class, 'show']);
+});
+
+
+Route::middleware(['auth:api', 'role:patiente'])->group(function () {
+    Route::post('whatsap.patiente/{id}', [ContacterController::class, 'redirigerWhatsApp']);
+    
+    Route::post('calculate-ovulatio', [CalculPeriodeOvulationController::class, 'calculateOvulation']);
+    Route::get('liste_informatio', [InformationPlanificationFamilialeController::class, 'index']);
+    Route::get('detail_informatio/{id}', [InformationPlanificationFamilialeController::class, 'show']);
+
+});
 
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::get('liste_personnelsante', [PersonnelSanteController::class, 'index'])->name('liste_invalide');
@@ -69,5 +90,7 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::post('create-ressource', [RessourcePlanificationFamilialeController::class, 'store']);
     Route::post('create-information', [InformationPlanificationFamilialeController::class, 'store']);
     Route::put('update-ressource/{id}', [RessourcePlanificationFamilialeController::class, 'update']);
+    Route::get('liste_message', [ContacterController::class, 'index']);
+    Route::delete('supprimer_message/{id}', [ContacterController::class, 'destroy']);
 
 });

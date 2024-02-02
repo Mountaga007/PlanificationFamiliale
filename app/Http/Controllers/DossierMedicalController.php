@@ -6,6 +6,8 @@ use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Dossier_Medical;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\Foreach_;
 
 class DossierMedicalController extends Controller
@@ -84,10 +86,13 @@ class DossierMedicalController extends Controller
      */
     public function store(Request $request, $id)
     {
+
+        
         try {
             // Récupérer l'utilisateur actuel
             $user = auth()->user();
             $patiente = User::find($id);
+            //dd($patiente->role);
             
             if ($patiente->role === 'patiente') {
             // Créer le dossier médical lié à l'utilisateur et au personnel de santé
@@ -110,7 +115,7 @@ class DossierMedicalController extends Controller
     
             // Assurez-vous que le personnel de santé associé existe
             if ($user->role=='personnelsante') {
-                $dossier_Medical->personnelsante_id = $user->personnelSante->id;
+                $dossier_Medical->personnelsante_id = $user->PersonnelSante->id;
             } else {
                 // Gérer le cas où le personnel de santé n'est pas trouvé
                 throw new \Exception("Personnel de santé non trouvé.");
@@ -197,7 +202,10 @@ class DossierMedicalController extends Controller
      */
     public function update(Request $request, Dossier_Medical $dossier_Medical)
     {
+
     try {
+        $user = Auth()->user();
+        if ($user->PersonnelSante->id==$dossier_Medical->personnelsante_id) {
         // Assurez-vous que le dossier médical existe
         if (!$dossier_Medical) {
             return response()->json([
@@ -207,28 +215,39 @@ class DossierMedicalController extends Controller
         }
 
         // Mettez à jour les propriétés du dossier médical avec les nouvelles valeurs
-        $dossier_Medical->update([
-            'statut' => $request->statut,
-            'numero_Identification' => $request->numero_Identification,
-            'age' => $request->age,
-            'poste_avortement' => $request->poste_avortement,
-            'poste_partum' => $request->poste_partum,
-            'methode_en_cours' => $request->methode_en_cours,
-            'methode' => $request->methode,
-            'methode_choisie' => $request->methode_choisie,
-            'preciser_autres_methodes' => $request->preciser_autres_methodes,
-            'raison_de_la_visite' => $request->raison_de_la_visite,
-            'indication' => $request->indication,
-            'effets_indesirables_complications' => $request->effets_indesirables_complications,
-            'date_visite' => $request->date_visite,
-            'date_prochain_rv' => $request->date_prochain_rv,
-        ]);
+
+        $dossier_Medical -> statut = $request -> statut;
+        $dossier_Medical -> numero_Identification = $request->numero_Identification;
+        $dossier_Medical -> age = $request->age;
+        $dossier_Medical -> poste_avortement = $request->poste_avortement;
+        $dossier_Medical -> poste_partum = $request->poste_partum;
+        $dossier_Medical -> methode_en_cours = $request->methode_en_cours;
+        $dossier_Medical -> methode = $request->methode;
+        $dossier_Medical -> methode_choisie = $request->methode_choisie;
+        $dossier_Medical -> preciser_autres_methodes = $request->preciser_autres_methodes;
+        $dossier_Medical -> raison_de_la_visite = $request->raison_de_la_visite;
+        $dossier_Medical -> indication = $request->indication;
+        $dossier_Medical -> effets_indesirables_complications = $request->effets_indesirables_complications;
+        $dossier_Medical -> date_visite = $request->date_visite;
+        $dossier_Medical -> date_prochain_rv = $request->date_prochain_rv;
+
+        $dossier_Medical->update();
+
+        // Rechargez le modèle après la mise à jour
+$dossier_Medical->refresh();
 
         return response()->json([
             'code_valide' => 200,
             'message' => 'Dossier médical mis à jour avec succès.',
             'dossier_medical' => $dossier_Medical,
         ], 200);
+
+    } else {
+        return response()->json([
+            'code_valide' => 401,
+            'message' => 'Vous n\'avez pas les autorisations pour modifier le dossier médical.',
+        ], 401);
+    }
     } catch (\Exception $e) {
         return response()->json([
             'code_valide' => 500,
@@ -245,4 +264,42 @@ class DossierMedicalController extends Controller
     {
         //
     }
+
+    public function telechargerDossier($id)
+{
+    try {
+        // Récupérer le dossier médical en fonction de l'ID
+        $dossierMedical = Dossier_Medical::findOrFail($id);
+
+        // Vérifier si le doss ier médical appartient au personnel de santé authentifié
+        $user = auth()->user();
+        if ($dossierMedical->personnelsante_id != $user->personnelSante->id) {
+            return response()->json([
+                'code_valide' => 403,
+                'message' => 'Accès non autorisé.',
+            ], 403);
+        }
+
+        // Générer le contenu du fichier (vous devrez ajuster cette logique en fonction de la structure de votre dossier médical)
+        $contenuFichier = json_encode($dossierMedical);
+
+        // Définir le nom du fichier (vous pouvez également ajuster cela en fonction de vos besoins)
+        $nomFichier = 'dossier_medical_' . $dossierMedical->id . '.json';
+
+        // Enregistrer le fichier temporaire
+        Storage::put($nomFichier, $contenuFichier);
+
+        // Récupérer le chemin du fichier
+        $cheminFichier = storage_path("app/{$nomFichier}");
+
+        // Retourner le fichier en tant que réponse de téléchargement
+        return response()->download($cheminFichier, $nomFichier)->deleteFileAfterSend(true);
+    } catch (\Exception $e) {
+        return response()->json([
+            'code_valide' => 500,
+            'message' => 'Une erreur s\'est produite lors du téléchargement du dossier médical.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 }
