@@ -78,7 +78,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-    
+
     public function Ressource_PF()
     {
         return $this->hasMany(Ressource_Planification_familiale::class);

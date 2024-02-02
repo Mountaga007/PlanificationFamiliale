@@ -8,6 +8,7 @@ use App\Http\Controllers\ContacterController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\PersonnelSanteController;
 use App\Http\Controllers\CalculPeriodeOvulationController;
+use App\Http\Controllers\DossierMedicalController;
 use App\Http\Controllers\RessourcePlanificationFamilialeController;
 use App\Http\Controllers\InformationPlanificationFamilialeController;
 
@@ -51,6 +52,11 @@ Route::delete('supprimer_message/{id}', [ContacterController::class, 'destroy'])
 Route::delete('supprimer_message/{id}', [ContacterController::class, 'destroy']);
 Route::post('whatsapp.patiente/{id}', [ContacterController::class, 'redirigerWhatsApp']);
 Route::post('calculate-ovulation', [CalculPeriodeOvulationController::class, 'calculateOvulation']);
+Route::post('recherche', [DossierMedicalController::class, 'recherche']);
+Route::post('enregistrerDossierMedical/{id}', [DossierMedicalController::class, 'store']);
+Route::get('listetotaleDM', [DossierMedicalController::class, 'index']);
+Route::get('/DetailDM/{id}', [DossierMedicalController::class, 'show']);
+Route::put('/updateDM/{id}', [DossierMedicalController::class, 'update']);
 
 
 
