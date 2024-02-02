@@ -222,7 +222,6 @@ class DossierMedicalController extends Controller
             'effets_indesirables_complications' => $request->effets_indesirables_complications,
             'date_visite' => $request->date_visite,
             'date_prochain_rv' => $request->date_prochain_rv,
-            // Ajoutez d'autres colonnes à mettre à jour ici...
         ]);
 
         return response()->json([
