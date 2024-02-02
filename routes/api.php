@@ -55,7 +55,7 @@ Route::post('calculate-ovulation', [CalculPeriodeOvulationController::class, 'ca
 Route::post('recherche', [DossierMedicalController::class, 'recherche']);
 Route::post('enregistrerDossierMedical/{id}', [DossierMedicalController::class, 'store']);
 Route::get('listetotaleDM', [DossierMedicalController::class, 'index']);
-Route::get('/DetailDM/{id}', [DossierMedicalController::class, 'show']);
+Route::get('/DetailDM/{dossierMedical}', [DossierMedicalController::class, 'show']);
 Route::put('/updateDM/{id}', [DossierMedicalController::class, 'update']);
 
 

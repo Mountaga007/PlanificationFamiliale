@@ -14,17 +14,33 @@ class DossierMedicalController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        try {
-            return response()->json([
+{
+    try {
+        // Récupérer la liste des dossiers médicaux avec les détails du patient
+        $listeDossiersMedicaux = Dossier_Medical::all();
+        $information=[];
+        foreach ($listeDossiersMedicaux as $listeDossiersMedical) {
+            $patiente=User::where('id', $listeDossiersMedical->patiente_id)->first();
+            $information[]=[
+                'information_du_dossier_medical'=> $listeDossiersMedical,
+                'information_de_la_patiente'=> $patiente
+            ];
+            
+        }
+        return response()->json([
             'code_valide' => 200,
-            'message' => 'La liste des détails de tous les dossiers a été bien récupéré.',
-            'liste_totale_des_dossiers_medicaux' => Dossier_Medical::all(),
-            ]);
-            } catch (Exception $e) {
-            return response() -> json($e);
-            }
+            'message' => 'La liste des détails de tous les dossiers a été bien récupérée.',
+            'Liste des dossiers medicaux' => $information,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'code_valide' => 500,
+            'message' => 'Une erreur s\'est produite lors de la récupération des dossiers médicaux.',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
+
 
     public function recherche(Request $request)
 {
@@ -132,25 +148,22 @@ class DossierMedicalController extends Controller
     public function show(Dossier_Medical $dossierMedical)
 {
     try {
-        // Assurez-vous que l'utilisateur associé à ce dossier médical existe
-        $user = $dossierMedical->utilisateur;
-
+       
+        $user = User::where('id',$dossierMedical->patiente_id)->first();
+    
         if ($user) {
-            // Accéder à la propriété 'role' seulement si l'utilisateur existe
-            $role = optional($user)->role;
-
             // Retourner les détails de la ressource en tant que réponse JSON
             return response()->json([
                 'code_valide' => 200,
                 'message' => 'Les détails du dossier médical récupérés avec succès.',
                 'liste_des_details_dossier_medical' => $dossierMedical,
-                'role_utilisateur' => $role,
+                'liste_des_details_patiente' => $user,
             ]);
         } else {
             // Gérer le cas où l'utilisateur associé n'est pas trouvé
             return response()->json([
                 'code_valide' => 404,
-                'message' => 'Utilisateur associé au dossier médical non trouvé.',
+                'message' => 'Utilisateur (patiente) associé au dossier médical non trouvé.',
             ], 404);
         }
     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
