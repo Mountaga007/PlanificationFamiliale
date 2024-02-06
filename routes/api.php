@@ -52,7 +52,7 @@ Route::get('detail_information/{id}', [InformationPlanificationFamilialeControll
 
 Route::middleware(['auth:api', 'role:personnelsante'])->group(function () {
     Route::post('enregistrer_Dossier_Medical/{id}', [DossierMedicalController::class, 'store']);
-    Route::post('/update_DM/{dossier_Medical}', [DossierMedicalController::class, 'update']);
+    Route::put('/update_DM/{dossier_Medical}', [DossierMedicalController::class, 'update']);
     Route::post('recherche', [DossierMedicalController::class, 'recherche']);
     Route::post('archiver_DM/{dossier_Medical}', [DossierMedicalController::class, 'destroy']);
 
@@ -79,7 +79,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::delete('supprimer_commentaire/{id}', [CommentaireController::class, 'destroy']);
 
     Route::post('creer_commentaire_forum/{forumId}', [CommentaireController::class, 'participerForum']);
-    Route::post('update_commentaire/{commentaire}', [CommentaireController::class, 'update']);
+    Route::put('update_commentaire/{commentaire}', [CommentaireController::class, 'update']);
     Route::post('calculer_periode_ovulation', [CalculPeriodeOvulationController::class, 'calculateOvulation']);
 });
 
@@ -97,8 +97,8 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::put('invalider/{id}', [AdminController::class, 'invaliderInscription']);
     Route::post('create_ressource', [RessourcePlanificationFamilialeController::class, 'store']);
     Route::post('create_information', [InformationPlanificationFamilialeController::class, 'store']);
-    Route::post('update_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'update']);
-    Route::post('update_information/{id}', [InformationPlanificationFamilialeController::class, 'update']);
+    Route::put('update_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'update']);
+    Route::put('update_information/{id}', [InformationPlanificationFamilialeController::class, 'update']);
     Route::delete('supprimer_information/{id}', [InformationPlanificationFamilialeController::class, 'destroy']);
     Route::delete('supprimer_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'destroy']);
     Route::get('liste_message', [ContacterController::class, 'index']);
