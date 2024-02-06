@@ -10,6 +10,10 @@ class Commentaire extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'texte',
+    ];
+
     public function user()
         {
             return $this->belongsTo(User::class);

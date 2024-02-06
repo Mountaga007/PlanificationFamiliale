@@ -17,38 +17,44 @@ class CalculPeriodeOvulationController extends Controller
     }
 
     public function calculateOvulation(Request $request)
-    {
-        try {
-            // Validation des paramètres de la requête
-            $request->validate([
-                'dateRegles' => ['required', 'date'],
-                'dureeCycle' => ['required', 'integer' , 'min:1'],
-            ]);
+{
+    try {
+        // Validation des paramètres de la requête
+        $request->validate([
+            'dateRegles' => ['required', 'date'],
+            'dureeCycle' => ['required', 'integer', 'min:1'],
+        ]);
 
-            // Extraction des paramètres de la requête
-            $premierJourRegles = Carbon::parse($request->input('dateRegles'));
-            $dureeCycle = $request->input('dureeCycle');
+        // Extraction des paramètres de la requête
+        $premierJourRegles = Carbon::parse($request->input('dateRegles'));
+        $dureeCycle = $request->input('dureeCycle');
 
-            // Calcul de la période d'ovulation
-            $dateOvulationDebut = $premierJourRegles->copy()->addDays($dureeCycle - 14);
-            $dateOvulationFin = $dateOvulationDebut->copy()->addDays(6);
+        // Calcul de la période d'ovulation
+        $dateOvulationDebut = $premierJourRegles->copy()->addDays($dureeCycle - 14);
+        // Calcul de la première date de la période de fertilité
+        $dateFertiliteDebut = $dateOvulationDebut->copy()->subDays(5);
 
-            // Renvoi des résultats au format JSON
-            return response()->json([
-                'code_valide' => 500,
-                'message' => 'Calcul de la periode d\'ovulation reussi.',
-                'Le_début_de_votre_jour_ovulation' => $dateOvulationDebut->toDateString(),
-                'Le_fin_de_votre_jour_ovulation' => $dateOvulationFin->toDateString(),
-            ]);
-        } catch (\Exception $e) {
-            // Gestion des erreurs avec un message approprié
-            return response()->json([
-                'code_valide' => 500,
-                'message' => 'Erreur lors du calcul de la période d\'ovulation.',
-                'error' => $e->getMessage(),
-            ]);
-        }
+        // Renvoi des résultats au format JSON
+        return response()->json([
+            'code_valide' => 200,
+            'message' => 'Calcul de la période d\'ovulation réussi.',
+            'Date_estimée_de_votre_ovulation' => $dateOvulationDebut->toDateString(),
+            'Votre_période_de_fertilité_estimée' => $dateFertiliteDebut->toDateString() . ' au ' . $dateOvulationDebut->toDateString(),
+        ]);
+    } catch (\Exception $e) {
+        // Gestion des erreurs avec un message approprié
+        return response()->json([
+            'code_valide' => 500,
+            'message' => 'Erreur lors du calcul de la période d\'ovulation.',
+            'error' => $e->getMessage(),
+        ]);
     }
+}
+
+
+
+
+
 
     /**
      * Show the form for creating a new resource.

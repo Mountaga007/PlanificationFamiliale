@@ -90,4 +90,15 @@ class User extends Authenticatable implements JWTSubject
 
     }
 
+
+    public function forum()
+    {
+        return $this->hasMany(Forum_Communication::class);
+    }
+
+    public function commentaires()
+    {
+        return $this->hasMany(Commentaire::class);
+    }
+
 }

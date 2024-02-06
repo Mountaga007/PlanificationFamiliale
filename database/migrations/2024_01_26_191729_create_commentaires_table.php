@@ -15,6 +15,13 @@ return new class extends Migration
             $table->id();
             
             $table->string('texte');
+
+            $table->unsignedBigInteger('forum_communication_id');
+            $table->foreign('forum_communication_id')->references('id')->on('forum__communications')->onDelete('cascade');
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

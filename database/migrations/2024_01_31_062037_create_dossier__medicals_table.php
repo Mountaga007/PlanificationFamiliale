@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('effets_indesirables_complications')->nullable();
             $table->date('date_visite')->nullable();
             $table->date('date_prochain_rv')->nullable();
+            $table->boolean('archive')->default(false);
 
             $table->unsignedBigInteger('personnelsante_id');
             $table->foreign('personnelsante_id')->references('id')->on('personnel_santes')->onDelete('cascade');

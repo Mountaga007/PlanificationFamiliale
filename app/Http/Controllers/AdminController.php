@@ -21,6 +21,13 @@ class AdminController extends Controller
     try {
         $user = User::findOrFail($id);
 
+        if ($user->role === 'personnelsante' && $user->statut_compte === 1) {
+            return response()->json([
+                'code_valide' => 200,
+                'message' => "Ce compte est déjà validé, actif.",
+            ], 200);
+        }
+
         if ($user->role === 'personnelsante') {
             // Valider l'inscription en mettant à jour le statut
             $user->update(['statut_compte' => true]);
@@ -48,6 +55,13 @@ public function invaliderInscription($id)
 {
     try {
         $user = User::findOrFail($id);
+
+        if ($user->role === 'personnelsante' && $user->statut_compte === 0) {
+            return response()->json([
+                'code_valide' => 200,
+                'message' => "Ce compte est déjà invalidé, inactif.",
+            ], 200);
+        }
 
         if ($user->role === 'personnelsante') {
             // Invalider l'inscription en mettant à jour le statut

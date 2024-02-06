@@ -15,13 +15,13 @@ class PersonnelSante extends Model
         'service'
     ];
 
-    public function admin()
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function dossiersMedicaux()
     {
-        return $this->hasMany(Dossier_Medical::class);
+        return $this->hasMany(Dossier_Medical::class, 'personnelsante_id');
     }
 }

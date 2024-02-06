@@ -71,29 +71,31 @@ class ContacterController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        try {
-            $request->validate([
-                'nom' => ['required', 'string'],
-                'email' => ['required', 'email'],
-                'message' => ['required', 'string'],
-            ]);
-            
-            // Création d'un nouveau message
-            Contacter::create($request->all());
-            return response()->json([
-                'code_valide' => 200,
-                'message' => 'Votre message a été envoyé avec succès.',
-            ]);
-        } catch (\Exception $e) {
-            // Gérer les erreurs avec un message approprié
-            return response()->json([
-                'code_valide' => 500,
-                'message' => 'Erreur lors de l\'envoie du message.',
-                'error' => $e->getMessage(),
-            ]);
-        }
+{
+    try {
+        $request->validate([
+            'nom' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'message' => ['required', 'string'],
+        ]);
+
+        // Création d'un nouveau message sans utilisateur associé
+        Contacter::create($request->all());
+
+        return response()->json([
+            'code_valide' => 200,
+            'message' => 'Votre message a été envoyé avec succès.',
+        ]);
+    } catch (\Exception $e) {
+        // Gérer les erreurs avec un message approprié
+        return response()->json([
+            'code_valide' => 500,
+            'message' => 'Erreur lors de l\'envoi du message.',
+            'error' => $e->getMessage(),
+        ]);
     }
+}
+
 
     /**
      * Display the specified resource.
@@ -109,6 +111,37 @@ class ContacterController extends Controller
     public function edit(Contacter $contacter)
     {
         //
+    }
+
+    public function contacter_admin()
+        {
+        try {
+            // Récupérer l'utilisateur authentifié
+            $user = auth()->user();
+
+            // Vérifier si l'utilisateur est authentifié
+        if (!$user) {
+            return response()->json([
+                'code_valide' => 401,
+                'message' => 'Utilisateur non authentifié.',
+            ], 401);
+        }
+
+            // Récupérer les messages de l'utilisateur pour l'admin
+            $messages = Contacter::where('user_id', $user->id)->get();
+
+            return response()->json([
+                'code_valide' => 200,
+                'message' => 'Liste des messages de l\'utilisateur récupérée avec succès.',
+                'liste_des_messages' => $messages,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code_valide' => 500,
+                'message' => 'Erreur lors de la récupération des messages de l\'utilisateur.',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

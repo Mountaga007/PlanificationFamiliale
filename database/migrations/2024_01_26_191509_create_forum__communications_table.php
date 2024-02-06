@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('forum__communications', function (Blueprint $table) {
             $table->id();
-            
+            $table->string('titre');
+            $table->string('texte');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

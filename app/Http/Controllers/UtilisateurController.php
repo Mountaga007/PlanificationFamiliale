@@ -50,7 +50,7 @@ class UtilisateurController extends Controller
                 'email' => ['required', 'email', 'unique:users,email'],
                 'password' => ['required', 'string', 'min:8', 'max:30'],
                 'telephone' => ['required', 'string', 'max:20'],
-                'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
+                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
             ]);
     
             $utilisateur = new User();

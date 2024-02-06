@@ -18,20 +18,15 @@ class PersonnelSanteController extends Controller
      public function index()
 {
     try {
-        $tab = [];
-        $personnelsDeSante = PersonnelSante::all();
-        foreach($personnelsDeSante as $PSInvalide){
-            if($PSInvalide->user->statut_compte === 0){
-                $tab[] = $PSInvalide;
-            }
-        }
-            
+
+        $personnelsDeSante = PersonnelSante::with('user:id,nom,email,telephone,role')->get();
+
         return response()->json([
             'code_valide' => 200,
-            'message' =>  'La liste des personnels de santé avec un statut de compte invalidé a été bien récupérée.',
-            'liste_des_personnels_de_sante' => $tab,
+            'message' => 'La liste des personnels de santé a été bien récupérée.',
+            'liste_des_personnels_de_sante' => $personnelsDeSante,
         ]);
-    } catch (\Exception $e) { 
+    } catch (\Exception $e) {
         return response()->json([
             'code_valide' => 500,
             'message' => 'Une erreur s\'est produite lors de la récupération des personnels de santé.',
@@ -39,6 +34,7 @@ class PersonnelSanteController extends Controller
         ], 500);
     }
 }
+
 
   
     //liste personnel de santé Validé
