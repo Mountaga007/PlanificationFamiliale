@@ -46,40 +46,63 @@ class InformationPlanificationFamilialeController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'titre' => ['required', 'string'],
-            'texte' => ['required', 'string'],
-            'image' => ['nullable','image', 'mimes:jpeg,png,jpg,gif'],
-        ]);
-
-    $information = new Information_Planification_Familiale();
-        $information->titre = $request->titre;
-        $information->texte = $request->texte;
-
-        if ($request->file('image')) {
-            $imageFile = $request->file('image');
-            $filename = date('YmdHi') . $imageFile->getClientOriginalName();
-            $imageFile->move(public_path('images'), $filename);
-            $information->image = $filename;
-        }
-
-        $information->admin_id = Auth::id(); 
-
-        $information->save();
-
-        if ($information->id) {
-            return response()->json([
-                
-    
-                'code_valide' => 200,
-                'message' => 'Les informations sur la planification familiale a été enregistrée avec succès.',
+        try {
+            // Valider les données du formulaire
+            $request->validate([
+                'titre' => ['required', 'string'],
+                'texte' => ['required', 'string'],
+                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,pdf'],
+                'document' => ['nullable', 'file', 'mimes:pdf'],
             ]);
-        } else {
-            
-  
+    
+            // Récupérer l'utilisateur authentifié
+            $admin = auth()->user();
+    
+            // Créer une instance du modèle Information_Planification_Familiale avec les données validées
+            $information = new Information_Planification_Familiale([
+                'titre' => $request->titre,
+                'texte' => $request->texte,
+            ]);
+    
+            // Gérer l'image s'il y en a une
+            if ($request->hasFile('image')) {
+                $imageFile = $request->file('image');
+                $filename = date('YmdHi') . $imageFile->getClientOriginalName();
+                $imageFile->move(public_path('images'), $filename);
+                $information->image = $filename;
+            }
+    
+            // Gérer le fichier PDF s'il y en a un
+            if ($request->hasFile('document')) {
+                $pdfFile = $request->file('document');
+                $pdfFilename = date('YmdHi') . $pdfFile->getClientOriginalName();
+                $pdfFile->move(public_path('pdf_files'), $pdfFilename);
+                $information->document = $pdfFilename;
+            }
+    
+            // Assigner l'administrateur authentifié comme créateur de l\'information
+            $information->admin_id = $admin->id;
+    
+            // Sauvegarder l\'information
+            $information->save();
+    
+            // Vérifier si la sauvegarde a réussi
+            if ($information->id) {
+                return response()->json([
+                    'code_valide' => 200,
+                    'message' => 'L\'information de planification familiale a été enregistrée avec succès.',
+                ]);
+            } else {
+                return response()->json([
+                    'code_valide' => 500,
+                    'message' => 'Échec de l\'enregistrement de l\'information de planification familiale.',
+                ]);
+            }
+        } catch (\Exception $e) {
             return response()->json([
                 'code_valide' => 500,
-                'message' => 'Échec de l\'enregistrement de la information$information de planification familiale.',
+                'message' => 'Une erreur s\'est produite lors de la création de l\'information de planification familiale.',
+                'error' => $e->getMessage(),
             ]);
         }
     }

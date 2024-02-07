@@ -14,6 +14,7 @@ class Ressource_Planification_familiale extends Model
         'texte',
         'image',
         'admin_id',
+        'document',
     ];
     public function admin()
         {

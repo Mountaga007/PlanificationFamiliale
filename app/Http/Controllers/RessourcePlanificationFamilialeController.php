@@ -44,41 +44,72 @@ class RessourcePlanificationFamilialeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // 
+    
     public function store(Request $request)
     {
-        $request->validate([
-            'titre' => ['required', 'string'],
-            'texte' => ['required', 'string'],
-            'image' => ['nullable','image', 'mimes:jpeg,png,jpg,gif'],
-        ]);
-
-    $ressource = new Ressource_Planification_familiale();
-        $ressource->titre = $request->titre;
-        $ressource->texte = $request->texte;
-
-        if ($request->file('image')) {
-            $imageFile = $request->file('image');
-            $filename = date('YmdHi') . $imageFile->getClientOriginalName();
-            $imageFile->move(public_path('images'), $filename);
-            $ressource->image = $filename;
-        }
-
-        $ressource->admin_id = Auth::id(); 
-
-        $ressource->save();
-
-        if ($ressource->id) {
-            return response()->json([
-                'code_valide' => 200,
-                'message' => 'La ressource de planification familiale a été enregistrée avec succès.',
+        try {
+            // Valider les données du formulaire
+            $request->validate([
+                'titre' => ['required', 'string'],
+                'texte' => ['required', 'string'],
+                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,pdf'],
+                'document' => ['nullable', 'file', 'mimes:pdf'],
             ]);
-        } else {
+    
+            // Récupérer l'utilisateur authentifié
+            $admin = auth()->user();
+    
+            // Créer une instance du modèle Ressource_Planification_familiale avec les données validées
+            $ressource = new Ressource_Planification_familiale([
+                'titre' => $request->titre,
+                'texte' => $request->texte,
+            ]);
+    
+            // Gérer l'image s'il y en a une
+            if ($request->hasFile('image')) {
+                $imageFile = $request->file('image');
+                $filename = date('YmdHi') . $imageFile->getClientOriginalName();
+                $imageFile->move(public_path('images'), $filename);
+                $ressource->image = $filename;
+            }
+    
+            // Gérer le fichier PDF s'il y en a un
+            if ($request->hasFile('document')) {
+                $pdfFile = $request->file('document');
+                $pdfFilename = date('YmdHi') . $pdfFile->getClientOriginalName();
+                $pdfFile->move(public_path('pdf_files'), $pdfFilename);
+                $ressource->document = $pdfFilename;
+            }
+    
+            // Assigner l'administrateur authentifié comme créateur de la ressource
+            $ressource->admin_id = $admin->id;
+    
+            // Sauvegarder la ressource
+            $ressource->save();
+    
+            // Vérifier si la sauvegarde a réussi
+            if ($ressource->id) {
+                return response()->json([
+                    'code_valide' => 200,
+                    'message' => 'La ressource de planification familiale a été enregistrée avec succès.',
+                ]);
+            } else {
+                return response()->json([
+                    'code_valide' => 500,
+                    'message' => 'Échec de l\'enregistrement de la ressource de planification familiale.',
+                ]);
+            }
+        } catch (\Exception $e) {
             return response()->json([
                 'code_valide' => 500,
-                'message' => 'Échec de l\'enregistrement de la ressource de planification familiale.',
+                'message' => 'Une erreur s\'est produite lors de la création de la ressource de planification familiale.',
+                'error' => $e->getMessage(),
             ]);
         }
     }
+    
+
 
 
     /**
@@ -139,12 +170,12 @@ class RessourcePlanificationFamilialeController extends Controller
 
         // Vérifier si l'utilisateur authentifié a le rôle 'admin' et s'il est l'auteur de la ressource
         if (Auth::user()->role === 'admin' && Auth::id() === $ressource_Planification_familiale->admin_id) {
-            // Valider les données du formulaire
-            // $request->validate([
-            //     'titre' => ['required', 'string'],
-            //     'texte' => ['required', 'string'],
-            //     'image' => ['image', 'mimes:jpeg,png,jpg,gif'],
-            // ]);
+           // Valider les données du formulaire
+            $request->validate([
+                'titre' => ['required', 'string'],
+                'texte' => ['required', 'string'],
+                'image' => ['image', 'mimes:jpeg,png,jpg,gif'],
+            ]);
 
             // Mettre à jour les attributs de la ressource
             $ressource_Planification_familiale->titre = $request->titre;

@@ -113,4 +113,5 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::get('/Detail_DM/{dossierMedical}', [DossierMedicalController::class, 'show']);
     Route::post('telecharger_DM/{id}', [DossierMedicalController::class, 'telechargerDossier']);
     
+    Route::post('liste_message', [ContacterController::class, 'contacter_admin']);
 });

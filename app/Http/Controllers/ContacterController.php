@@ -113,6 +113,8 @@ class ContacterController extends Controller
         //
     }
 
+
+    //Liste des messages de l'utilisateur pour l'admin
     public function contacter_admin()
         {
         try {
@@ -158,9 +160,9 @@ class ContacterController extends Controller
     public function destroy(Contacter $contacter)
 {
     try {
-
         // Trouver le message par son ID
-        $message = Contacter::find($contacter);
+        $message = Contacter::find($contacter->id);
+
         // Vérifier si le message existe
         if (!$message) {
             return response()->json([
@@ -184,5 +186,6 @@ class ContacterController extends Controller
         ]);
     }
 }
+
 
 }
