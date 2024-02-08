@@ -120,24 +120,39 @@ public function listePatientes()
 
 
 
-    public function recherche(Request $request)
+public function recherche(Request $request)
 {
     try {
-        $users = User::all();
+        $user = User::where('telephone', $request->telephone)->first();
 
-        foreach ($users as $user) {
-            if ($user->telephone === $request->telephone) {
-                $user->role = 'patiente';
-                $user -> update();
-                return response()->json(compact('user'), 200);
+        if ($user) {
+
+            // Vérifier si l'utilisateur a déjà un dossier médical
+            $dossier_Medical = Dossier_Medical::all();
+            foreach ($dossier_Medical as $dossier) {
+                if ($user->id === $dossier->user_id) {
+                    return response()->json([
+                        'code_valide' => 409,
+                        'message' => 'L\'utilisateur a déjà un dossier médical.',
+                        'dossier_medical_id' => $user->dossierMedical->id,
+                    ], 409);
+                }
             }
+        
+            
+                return response()->json([
+                    'code_valide' => 200,
+                    'message' => 'Utilisateur trouvé. Veuillez compléter le formulaire pour créer un dossier médical.',
+                    'user' => $user,
+                ], 200);
+            
+             } else {
+            // Rediriger vers le formulaire d'inscription
+            return response()->json([
+                'code_valide' => 404,
+                'message' => 'Aucun utilisateur trouvé avec le numéro de téléphone fourni. Veuillez vous inscrire.',
+            ], 404);
         }
-
-        // message du recherche
-        return response()->json([
-            'code_valide' => 404,
-            'message' => 'Aucun utilisateur trouvé avec le numéro de téléphone fourni.',
-        ], 404);
     } catch (\Exception $e) {
         // Une erreur s'est produite
         return response()->json([
@@ -147,6 +162,7 @@ public function listePatientes()
         ], 500);
     }
 }
+
 
 
     /**
@@ -161,20 +177,17 @@ public function listePatientes()
      * Store a newly created resource in storage.
      */
   
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
 
      
         try {
             // Récupérer l'utilisateur actuel
             $user = auth()->user();
-            $patiente = User::find($id);
-            //dd($patiente->role);
-            
-            if ($patiente->role === 'patiente') {
+
             // Créer le dossier médical lié à l'utilisateur et au personnel de santé
             $dossier_Medical = new Dossier_Medical();
-            $dossier_Medical->patiente_id = $id;
+            $dossier_Medical->user_id = $request->id;
             $dossier_Medical->statut = $request->statut;
             $dossier_Medical->numero_Identification = $request->numero_Identification;
             $dossier_Medical->age = $request->age;
@@ -205,12 +218,6 @@ public function listePatientes()
                 "code_valide" => 200,
                 "message" => "Dossier médical créé avec succès.",
             ], 200);
-            }else {
-                return response()->json([
-                    "code_valide" => 404,
-                    "message" => "Patiente non trouvé.",
-                ], 404);
-            }
         } catch (\Exception $e) {
             return response()->json([
                 "code_valide" => 500,

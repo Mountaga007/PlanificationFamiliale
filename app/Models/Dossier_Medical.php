@@ -31,13 +31,9 @@ class Dossier_Medical extends Model
         return $this->belongsTo(PersonnelSante::class, 'personnelsante_id');
     }
 
-    public function utilisateur()
-    {
-        return $this->belongsTo(User::class);
-    }
 
-    public function patiente()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'patiente_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Planification Familiale",
-        "description": "La digitalisation de la PF au Sénégal vise à améliorer l'accès et la qualité des services de PF grâce aux TIC. L'objectif principal est de développer une application dédiée qui facilite l'accès aux informations, aux services et aux ressources liées à la planification familiale(PF), tant pour les professionnels de la santé que pour le grand public.",
+        "description": "La digitalisation de la Planification Familiale au Sénégal vise à améliorer l'accès et la qualité des services de Planification Familiale grâce aux TIC. L'objectif principal est de développer une application dédiée qui facilite l'accès aux informations, aux services et aux ressources liées à la planification familiale, tant pour les professionnels de la santé que pour le grand public.",
         "version": "1.0.0"
     },
     "security": [
@@ -1026,7 +1026,7 @@
                                 }
                             },
                             "example": {
-                                "telephone": "780258963"
+                                "telephone": "789874525"
                             }
                         }
                     }
@@ -1242,7 +1242,7 @@
                 ]
             }
         },
-        "/api/enregistrer_Dossier_Medical/10": {
+        "/api/enregistrer_Dossier_Medical": {
             "post": {
                 "summary": "Enregistrer un dossier médical",
                 "description": "",
@@ -1300,6 +1300,9 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
                                     "statut": {
                                         "type": "string"
                                     },
@@ -1345,7 +1348,8 @@
                                 }
                             },
                             "example": {
-                                "statut": "Nouveau Patiente",
+                                "id": "3",
+                                "statut": "Nouvelle Patiente",
                                 "numero_Identification": "458",
                                 "age": "45",
                                 "poste_avortement": "0",
@@ -1354,7 +1358,7 @@
                                 "methode": "implant",
                                 "methode_choisie": "injection",
                                 "preciser_autres_methodes": "injection",
-                                "raison_de_la_visite": "Utiliser une nou méthode",
+                                "raison_de_la_visite": " une nou méthode",
                                 "indication": "Nice",
                                 "effets_indesirables_complications": "pas effet",
                                 "date_visite": "2024-01-15",
@@ -2070,7 +2074,7 @@
                                 }
                             },
                             "example": {
-                                "dateRegles": "2024-02-05",
+                                "dateRegles": "2024-02-0",
                                 "dureeCycle": "28"
                             }
                         }
@@ -2665,8 +2669,8 @@
                                 }
                             },
                             "example": {
-                                "email": "mountaga889@gmail.com",
-                                "password": "mountaga123"
+                                "email": "moustaphaleye77@gmail.com",
+                                "password": "moustaphaleye77@"
                             }
                         }
                     }

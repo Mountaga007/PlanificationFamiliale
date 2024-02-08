@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('telephone');
             $table->string('image')->nullable();
-            $table->enum('role', ['utilisateur','personnelsante','patiente','admin'])->default('utilisateur');
+            $table->enum('role', ['utilisateur','personnelsante','admin'])->default('utilisateur');
             $table->boolean('statut_compte')->default(false);
 
             // $table->unsignedBigInteger('dossier_medical_id');

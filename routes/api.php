@@ -51,7 +51,7 @@ Route::get('detail_information/{id}', [InformationPlanificationFamilialeControll
 
 
 Route::middleware(['auth:api', 'role:personnelsante'])->group(function () {
-    Route::post('enregistrer_Dossier_Medical/{id}', [DossierMedicalController::class, 'store']);
+    Route::post('enregistrer_Dossier_Medical', [DossierMedicalController::class, 'store']);
     Route::put('/update_DM/{dossier_Medical}', [DossierMedicalController::class, 'update']);
     Route::post('recherche', [DossierMedicalController::class, 'recherche']);
     Route::post('archiver_DM/{dossier_Medical}', [DossierMedicalController::class, 'destroy']);
