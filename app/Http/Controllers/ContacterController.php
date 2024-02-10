@@ -53,7 +53,7 @@ class ContacterController extends Controller
 
             return redirect()->to($urlWhatsApp);
         } catch (ModelNotFoundException $e) {
-            return redirect()->route('whatsapp.patiente');
+            return redirect()->route('whatsapp.user');
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

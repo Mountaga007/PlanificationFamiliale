@@ -64,7 +64,7 @@ Route::middleware(['auth:api', 'role:personnelsante'])->group(function () {
     Route::get('/Details_DM/{dossierMedical}', [DossierMedicalController::class, 'show']);
     Route::post('telechargers_DM/{id}', [DossierMedicalController::class, 'telechargerDossier']);
 
-    Route::post('whatsapp.patiente/{id}', [ContacterController::class, 'redirigerWhatsApp']);
+    Route::post('whatsapp.user/{id}', [ContacterController::class, 'redirigerWhatsApp']);
 
 });
 
@@ -92,7 +92,7 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::get('liste_personnelsante', [PersonnelSanteController::class, 'index']);
     Route::get('liste_personnelsante_valide', [PersonnelSanteController::class, 'listevalide']);
     Route::get('liste_utilisateur', [UtilisateurController::class, 'index']);
-    Route::get('liste_Patientes', [DossierMedicalController::class, 'listePatientes']);
+    Route::get('liste_utilisateur_DM', [DossierMedicalController::class, 'liste_utilisateur_dossier_medical']);
     Route::put('valider/{id}', [AdminController::class, 'validerInscription']);
     Route::put('invalider/{id}', [AdminController::class, 'invaliderInscription']);
     Route::post('create_ressource', [RessourcePlanificationFamilialeController::class, 'store']);
