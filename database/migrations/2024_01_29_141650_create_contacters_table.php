@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('contacters', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->string('email');
+            $table->string('email')->unique();
             $table->text('message');
             
             $table->timestamps();

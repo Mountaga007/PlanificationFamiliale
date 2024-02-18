@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\storeUtilisateurRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
@@ -41,17 +42,10 @@ class UtilisateurController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(storeUtilisateurRequest $request)
     {
         
         try {
-            $request->validate([
-                'nom' => ['required', 'string', 'min:2', 'max:50'],
-                'email' => ['required', 'email', 'unique:users,email'],
-                'password' => ['required', 'string', 'min:8', 'max:30'],
-                'telephone' => ['required', 'string', 'max:20'],
-                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
-            ]);
     
             $utilisateur = new User();
             $utilisateur->nom = $request->nom;

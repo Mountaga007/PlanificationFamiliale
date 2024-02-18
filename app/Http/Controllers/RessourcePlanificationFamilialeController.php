@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\storeRessourceRequest;
 use App\Models\Ressource_Planification_familiale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,17 +47,10 @@ class RessourcePlanificationFamilialeController extends Controller
      */
     // 
     
-    public function store(Request $request)
+    public function store(storeRessourceRequest $request)
     {
         try {
-            // Valider les données du formulaire
-            $request->validate([
-                'titre' => ['required', 'string'],
-                'texte' => ['required', 'string'],
-                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,pdf'],
-                'document' => ['nullable', 'file', 'mimes:pdf'],
-            ]);
-    
+            
             // Récupérer l'utilisateur authentifié
             $admin = auth()->user();
     

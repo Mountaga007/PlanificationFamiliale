@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('personnel_santes', function (Blueprint $table) {
             $table->id();
-            $table->string('matricule');
+            $table->string('matricule')->unique();
             $table->string('structure');
             $table->string('service');
             

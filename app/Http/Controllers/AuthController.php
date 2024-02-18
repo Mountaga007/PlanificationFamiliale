@@ -90,6 +90,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
+            //Pour augmenter le temps d'expiration du token(durée de vie du token), on change(augmente) le *60
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }

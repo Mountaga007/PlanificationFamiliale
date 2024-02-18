@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\storeInformationPlanificationFamilialeRequest;
 use App\Models\Information_Planification_Familiale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,16 +45,9 @@ class InformationPlanificationFamilialeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(storeInformationPlanificationFamilialeRequest $request)
     {
         try {
-            // Valider les données du formulaire
-            $request->validate([
-                'titre' => ['required', 'string'],
-                'texte' => ['required', 'string'],
-                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,pdf'],
-                'document' => ['nullable', 'file', 'mimes:pdf'],
-            ]);
     
             // Récupérer l'utilisateur authentifié
             $admin = auth()->user();

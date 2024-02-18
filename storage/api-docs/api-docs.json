@@ -2082,9 +2082,9 @@
                 }
             }
         },
-        "/api/liste_Patientes": {
+        "/api/liste_utilisateur": {
             "get": {
-                "summary": "Liste des patientes",
+                "summary": "Liste des utilisateur",
                 "description": "",
                 "responses": {
                     "200": {
@@ -2217,9 +2217,9 @@
                 ]
             }
         },
-        "/api/liste_utilisateur": {
+        "/api/liste_utilisateur_DM": {
             "get": {
-                "summary": "Liste des utilisateurs",
+                "summary": "Liste des utilisateur avec un dossier médical",
                 "description": "",
                 "responses": {
                     "200": {
@@ -2434,10 +2434,10 @@
                                 }
                             },
                             "example": {
-                                "nom": "Khadidiatou Diop",
-                                "email": "khadidiatou75@gmail.com",
-                                "password": "khadidiatou75@",
-                                "telephone": "751236598",
+                                "nom": "Zeynaba Ba",
+                                "email": "zeynaba77@gmail.com",
+                                "password": "zeynaba77@",
+                                "telephone": "771236598",
                                 "image": {
                                     "type": "string",
                                     "format": "binary"
@@ -2446,6 +2446,114 @@
                         }
                     }
                 }
+            }
+        },
+        "/api/auth/refresh": {
+            "post": {
+                "summary": "Rafraîchir le jeton d'accès de l'utilisateur actuellement authentifié",
+                "description": "",
+                "responses": {
+                    "201": {
+                        "description": "Created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorize",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Authentification"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "User-Agent",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "/api/auth/me": {
+            "post": {
+                "summary": "les informations de l'utilisateur actuellement authentifié",
+                "description": "",
+                "responses": {
+                    "201": {
+                        "description": "Created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorize",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Authentification"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "User-Agent",
+                        "type": "string"
+                    }
+                ]
             }
         },
         "/api/invalider/{id}": {
@@ -2669,8 +2777,8 @@
                                 }
                             },
                             "example": {
-                                "email": "moustaphaleye77@gmail.com",
-                                "password": "moustaphaleye77@"
+                                "email": "mountaga889@gmail.com",
+                                "password": "mountaga123"
                             }
                         }
                     }

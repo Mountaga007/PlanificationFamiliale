@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\storeCommentaireRequest;
 use App\Models\Commentaire;
 use App\Models\Forum_Communication;
 use Illuminate\Http\Request;
@@ -58,7 +59,7 @@ class CommentaireController extends Controller
 
 
 
-    public function participerForum(Request $request, $forumId)
+    public function participerForum(storeCommentaireRequest $request, $forumId)
     {
         try {
             // Vérifier si l'utilisateur est authentifié

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\storeDossierMedicalRequest;
+use App\Http\Requests\storeRechercheRequest;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -176,14 +178,10 @@ public function liste_utilisateur_dossier_medical()
 //     }
 // }
 
-public function recherche(Request $request)
+public function recherche(storeRechercheRequest $request)
 {
     try {
-        // Valider la requête
-        $request->validate([
-            'telephone' => 'required',
-        ]);
-
+        
         $user = User::where('telephone', $request->telephone)->first();
 
         if ($user) {
@@ -236,7 +234,7 @@ public function recherche(Request $request)
      * Store a newly created resource in storage.
      */
   
-    public function store(Request $request)
+    public function store(storeDossierMedicalRequest $request)
     {
 
      
@@ -291,16 +289,16 @@ public function recherche(Request $request)
     
 
     /**
-     * Display the specified resource.
+     * Display the specified dossier medical.
      */
     public function show(Dossier_Medical $dossierMedical)
 {
     try {
        
-        $user = User::where('id',$dossierMedical->patiente_id)->first();
+        $user = User::where('id',$dossierMedical->user_id)->first();
     
         if ($user) {
-            // Retourner les détails de la ressource en tant que réponse JSON
+            // Retourner les détails du dossier médical en tant que réponse JSON
             return response()->json([
                 'code_valide' => 200,
                 'message' => 'Les détails du dossier médical récupérés avec succès.',

@@ -1,0 +1,85 @@
+
+ # Spécifie la version de la syntaxe Docker Compose à utiliser.
+version: "3.8"
+
+# Définit les différents services ou conteneurs qui composent l'application.
+services:
+    # Mysql database container
+    db: # Service pour le conteneur MySQL.
+
+        # Spécifie l'image Docker à utiliser pour le conteneur MySQL.
+        image: mysql 
+
+        # Définit le nom du conteneur.
+        container_name: Conteneur_PF_Mysql
+
+        # Indique que le conteneur doit toujours redémarrer en cas d'échec.
+        restart: always
+
+        # Montage d'un volume pour stocker les données de la base de données.
+        volumes:
+            - db-data:/var/lib/mysql
+
+        # Configuration pour autoriser un mot de passe vide pendant le développement.
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+        # Mappe le port 3306 du conteneur sur le port 3309 de l'hôte.
+        ports:
+            - "3309:3306"
+
+        # Spécifie les réseaux dans lesquels le conteneur doit etre accessible.
+        # ou bien Connecte le conteneur au réseau "Developpement".
+        networks:
+            - Developpement
+
+    # phpmyadmin container
+    phpmyadmin: # Service pour le conteneur phpMyAdmin.
+
+        # Spécifie l'image Docker à utiliser pour le conteneur phpMyAdmin.
+        image: phpmyadmin
+
+        # Définit le nom du conteneur phpMyAdmin.
+        container_name: Planification_Familiale_phpmyadmin
+
+        # Indique que le conteneur doit toujours redémarrer en cas d'échec.
+        restart: always
+        depends_on:
+            - db # Indique que ce service dépend du service "db".
+
+        # Mappe le port 80 du conteneur phpMyAdmin sur le port 8010 de l'hôte.
+        ports:
+            - 8010:80
+
+        # Configure l'hôte de la base de données pour phpMyAdmin.
+        environment:
+            PMA_HOST: db
+
+        # Spécifie les réseaux dans lesquels le conteneur doit etre accessible./
+        # Connecte le conteneur au réseau "Developpement".
+        networks:
+            - Developpement
+
+    www:  # Service pour le conteneur qui héberge l'application web.
+
+        # Spécifie l'image Docker à utiliser pour le conteneur./
+        # Construit l'image en utilisant le Dockerfile dans le répertoire "docker/php".
+        build: docker/php
+        container_name: Planification_Familiale
+
+        ports:
+            - "8002:80" # Mappe le port 80 du conteneur sur le port 8002 de l'hôte.
+        volumes:
+             # Montage des fichiers de configuration Apache.
+            - ./docker/php/vhosts:/etc/apache2/sites-enabled
+            - ./:/var/www/html # Montage du code source de l'application.
+        restart: always # Indique que le conteneur doit toujours redémarrer en cas d'échec.
+        networks:
+            - Developpement # Connecte le conteneur au réseau "Developpement".
+
+networks:
+    Developpement: # Définit le réseau "Developpement" qui connecte tous les conteneurs.
+
+
+volumes:
+    db-data: # Définit le volume "db-data" qui sera utilisé pour stocker les données de la base de données MySQL.

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\storeCalculPeriodeOvulationRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\CalculPeriodeOvulation;
@@ -16,15 +17,10 @@ class CalculPeriodeOvulationController extends Controller
         //
     }
 
-    public function calculateOvulation(Request $request)
+    public function calculateOvulation(storeCalculPeriodeOvulationRequest $request)
 {
     try {
-        // Validation des paramètres de la requête
-        $request->validate([
-            'dateRegles' => ['required', 'date'],
-            'dureeCycle' => ['required', 'integer', 'min:1'],
-        ]);
-
+        
         // Extraction des paramètres de la requête
         $premierJourRegles = Carbon::parse($request->input('dateRegles'));
         $dureeCycle = $request->input('dureeCycle');

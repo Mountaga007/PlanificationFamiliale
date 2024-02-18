@@ -114,4 +114,8 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::post('telecharger_DM/{id}', [DossierMedicalController::class, 'telechargerDossier']);
     
     Route::post('liste_message', [ContacterController::class, 'contacter_admin']);
+
+
+   // Route::delete('supprimer_commentaire/{id}', [CommentaireController::class, 'destroy']);
+
 });

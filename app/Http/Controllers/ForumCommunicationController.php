@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\storeForumCommunicationRequest;
 use App\Models\Forum_Communication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,15 +40,9 @@ class ForumCommunicationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(storeForumCommunicationRequest $request)
 {
     try {
-        // Valider les données du formulaire
-        $request->validate([
-            'titre' => ['required', 'string'],
-            'texte' => ['required', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
-        ]);
 
         // Créer une instance du modèle Forum_Communication avec les données validées
         $forum = new Forum_Communication([
@@ -62,7 +57,7 @@ class ForumCommunicationController extends Controller
             $imageFile->move(public_path('images'), $filename);
             $forum->image = $filename;
         }
-
+            $forum->user_id = Auth()->user()->id;
         // Sauvegarder le forum
         $forum->save();
 
@@ -121,25 +116,25 @@ class ForumCommunicationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $forum_Communication)
     {
         try {
-            $request->validate([
-                'titre' => ['required', 'string'],
-                'texte' => ['required', 'string'],
-                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
-            ]);
+            // $request->validate([
+            //     'titre' => ['required', 'string'],
+            //     'texte' => ['required', 'string'],
+            //     'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
+            // ]);
     
-            $forum = Forum_Communication::findOrFail($id);
-    
+            $forum = Forum_Communication::findOrFail($forum_Communication);
             // Vérifier si l'utilisateur actuel est l'auteur du forum
             if ($forum->user_id !== auth()->id()) {
+
                 return response()->json([
                     'code_valide' => 403,
                     'message' => 'Vous n\'avez pas la permission de modifier ce forum.',
                 ], 403);
             }
-    
+
             // Mettre à jour les attributs du forum
             $forum->titre = $request->titre;
             $forum->texte = $request->texte;
@@ -182,7 +177,7 @@ class ForumCommunicationController extends Controller
         $forum = Forum_Communication::findOrFail($id);
 
         //Vérifier si l'utilisateur actuel est l'auteur du forum ou s'il a le rôle d'administrateur
-        if ($forum->user_id !== auth()->id() && auth()->user()->role !== 'admin') {
+        if (!($forum->user_id == auth()->user()->id || auth()->user()->role == 'admin')) {
             return response()->json([
                 'code_valide' => 403, // Statut HTTP 403: Accès interdit
                 'message' => 'Vous n\'avez pas la permission de supprimer ce forum.',

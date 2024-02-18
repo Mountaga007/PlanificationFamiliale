@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\storeContacterAdminRequest;
 use Exception;
 use App\Models\Contacter;
 use Illuminate\Http\Request;
@@ -70,15 +71,10 @@ class ContacterController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(storeContacterAdminRequest $request)
 {
     try {
-        $request->validate([
-            'nom' => ['required', 'string'],
-            'email' => ['required', 'email'],
-            'message' => ['required', 'string'],
-        ]);
-
+        
         // Création d'un nouveau message sans utilisateur associé
         Contacter::create($request->all());
 
