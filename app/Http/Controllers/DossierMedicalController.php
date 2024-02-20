@@ -201,7 +201,7 @@ public function recherche(storeRechercheRequest $request)
             ], 200);
         } else {
             // Rediriger vers le formulaire d'inscription
-            return redirect()->route('nom_de_la_route_du_formulaire_inscription');
+            //return redirect()->route('nom_de_la_route_du_formulaire_inscription');
         }
     } catch (ModelNotFoundException $e) {
         // L'utilisateur n'a pas été trouvé
@@ -434,7 +434,6 @@ public function update(Request $request, Dossier_Medical $dossier_Medical)
     return response()->json([
         'code_valide' => 200,
         'message' => 'Le dossier médical a été archivé avec succès.',
-        //'dossier_medical' => $dossier_Medical,
     ]);
 }
 
@@ -513,7 +512,7 @@ public function telechargerDossier($id)
         // Récupérer le dossier médical avec les relations user et personnelSante
         $dossierMedical = Dossier_Medical::with(['user', 'personnelSante', 'personnelSante.user'])->findOrFail($id);
 
-        // Vérifier l'autorisation - vous pouvez personnaliser cette logique selon vos besoins
+        // Vérifier l'autorisation de l'utilisateur authentifié pour accès au dossier médical
         $user = auth()->user();
         if ($dossierMedical->personnelsante_id != $user->personnelSante->id) {
             return response()->json([

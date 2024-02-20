@@ -22,7 +22,7 @@ class storeRechercheRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'telephone' => ['required', 'unique:users,telephone','regex:/^+221(77|78|76|75|70)\d{7}$/'],
+            'telephone' => ['required', 'unique:users,telephone','regex:/^00221(77|78|76|75|70)\d{7}$/'],
 
         ];
     }
@@ -31,7 +31,7 @@ class storeRechercheRequest extends FormRequest
     {
         return [
             "telephone.required" => 'Le telephone est requis',
-            "telephone.regex" => 'Format telephone incorrect, ex: +221771234567',
+            "telephone.regex" => 'Format telephone incorrect, ex: 00221771234567',
             "telephone.unique" => 'Le telephone existe déjà',
         ];
     }

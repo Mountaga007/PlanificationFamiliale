@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PersonnelSante;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -32,10 +33,20 @@ class AdminController extends Controller
             // Valider l'inscription en mettant à jour le statut
             $user->update(['statut_compte' => true]);
 
+            // Envoi de l'email de confirmation
+            Mail::send('emailValidation',[
+                'nom' => $user->nom,
+            ],
+             function ($message) use ($user) {
+                $message->to($user->email);
+                $message->subject('Notification de validation d\'inscription');
+            });
+
             return response()->json([
                 'code_valide' => 200,
                 'message' => "L'inscription du personnel de santé a été validée avec succès.",
             ], 200);
+
         } else {
             return response()->json([
                 'code_valide' => 403,

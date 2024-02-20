@@ -126,14 +126,14 @@ class ForumCommunicationController extends Controller
             // ]);
     
             $forum = Forum_Communication::findOrFail($forum_Communication);
-            // Vérifier si l'utilisateur actuel est l'auteur du forum
-            if ($forum->user_id !== auth()->id()) {
 
-                return response()->json([
-                    'code_valide' => 403,
-                    'message' => 'Vous n\'avez pas la permission de modifier ce forum.',
-                ], 403);
-            }
+        //Vérifier si l'utilisateur actuel est l'auteur du forum
+        if (!($forum->user_id == auth()->user()->id)) {
+            return response()->json([
+                'code_valide' => 403, // Statut HTTP 403: Accès interdit
+                'message' => 'Vous n\'avez pas la permission de supprimer ce forum.',
+            ], 403);
+        }
 
             // Mettre à jour les attributs du forum
             $forum->titre = $request->titre;
