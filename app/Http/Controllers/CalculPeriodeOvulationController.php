@@ -20,10 +20,17 @@ class CalculPeriodeOvulationController extends Controller
     public function calculateOvulation(storeCalculPeriodeOvulationRequest $request)
 {
     try {
-        
         // Extraction des paramètres de la requête
         $premierJourRegles = Carbon::parse($request->input('dateRegles'));
         $dureeCycle = $request->input('dureeCycle');
+
+        // Validation de la durée du cycle menstruel
+        if ($dureeCycle < 20 || $dureeCycle > 45) {
+            return response()->json([
+                'code_valide' => 400,
+                'message' => 'La durée de votre cycle menstruel doit être comprise entre 20 et 45 jours.',
+            ]);
+        }
 
         // Calcul de la période d'ovulation
         $dateOvulationDebut = $premierJourRegles->copy()->addDays($dureeCycle - 14);
@@ -34,8 +41,8 @@ class CalculPeriodeOvulationController extends Controller
         return response()->json([
             'code_valide' => 200,
             'message' => 'Calcul de la période d\'ovulation réussi.',
-            'Date_estimée_de_votre_ovulation' => $dateOvulationDebut->toDateString(),
-            'Votre_période_de_fertilité_estimée' => $dateFertiliteDebut->toDateString() . ' au ' . $dateOvulationDebut->toDateString(),
+            'date_estimee_de_votre_ovulation' => $dateOvulationDebut->toDateString(),
+            'votre_periode_de_fertilite_estimee' => $dateFertiliteDebut->toDateString() . ' au ' . $dateOvulationDebut->toDateString(),
         ]);
     } catch (\Exception $e) {
         // Gestion des erreurs avec un message approprié
@@ -46,6 +53,7 @@ class CalculPeriodeOvulationController extends Controller
         ]);
     }
 }
+
 
 
 

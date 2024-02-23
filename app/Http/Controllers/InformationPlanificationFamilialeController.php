@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\storeInformationPlanificationFamilialeRequest;
+use App\Http\Requests\storeUpdateInformationPFRequest;
 use App\Models\Information_Planification_Familiale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -58,7 +59,7 @@ class InformationPlanificationFamilialeController extends Controller
                 'texte' => $request->texte,
             ]);
     
-            // Gérer l'image s'il y en a une
+            // Gérer l'image s'il y en a une.
             if ($request->hasFile('image')) {
                 $imageFile = $request->file('image');
                 $filename = date('YmdHi') . $imageFile->getClientOriginalName();
@@ -66,7 +67,7 @@ class InformationPlanificationFamilialeController extends Controller
                 $information->image = $filename;
             }
     
-            // Gérer le fichier PDF s'il y en a un
+            // Gérer le fichier PDF s'il y en a un.
             if ($request->hasFile('document')) {
                 $pdfFile = $request->file('document');
                 $pdfFilename = date('YmdHi') . $pdfFile->getClientOriginalName();
@@ -141,11 +142,12 @@ class InformationPlanificationFamilialeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Information_Planification_Familiale $id)
+    public function update(storeUpdateInformationPFRequest $request, $id)
     {
         try {
 
             $information_Planification_Familiale = Information_Planification_Familiale::find($id);
+
             // Vérifier si l'information existe
             if (!$information_Planification_Familiale) {
                 return response()->json([
@@ -155,19 +157,13 @@ class InformationPlanificationFamilialeController extends Controller
             }
            
             // Vérifier si l'utilisateur authentifié a le rôle 'admin' et s'il est l'auteur de l'information'
-            if (Auth::user()->role === 'admin' && Auth::id() === $information_Planification_Familiale[0]->admin_id) {
-                // Valider les données du formulaire
+            if (auth()->user()->role == 'admin' && Auth::id() === $information_Planification_Familiale->admin_id) {
                 
-                $request->validate([
-                    'titre' => ['required', 'string'],
-                    'texte' => ['required', 'string'],
-                    'image' => ['image', 'mimes:jpeg,png,jpg,gif'],
-                ]);
 
                 // Mettre à jour les attributs de l'information
-                $information_Planification_Familiale[0]->titre = $request->titre;
-                $information_Planification_Familiale[0]->texte = $request->texte;
-            
+                $information_Planification_Familiale->titre = $request->titre;
+                $information_Planification_Familiale->texte = $request->texte;
+                
                 // Mettre à jour l'image si elle est fournie
                 if ($request->file('image')) {
                     $imageFile = $request->file('image');
@@ -175,9 +171,17 @@ class InformationPlanificationFamilialeController extends Controller
                     $imageFile->move(public_path('images'), $filename);
                     $information_Planification_Familiale[0]->image = $filename;
                 }
+                
+                // Mettre à jour le document si il est fourni
+                if ($request->file('document')) {
+                    $pdfFile = $request->file('document');
+                    $pdfFilename = date('YmdHi') . $pdfFile->getClientOriginalName();
+                    $pdfFile->move(public_path('pdf_files'), $pdfFilename);
+                    $information_Planification_Familiale[0]->document = $pdfFilename;
+                }
 
                 // Sauvegarder les modifications
-                $information_Planification_Familiale[0]->save();
+                $information_Planification_Familiale->save();
 
                 return response()->json([
                     'code_valide' => 200,
@@ -206,7 +210,7 @@ class InformationPlanificationFamilialeController extends Controller
     public function destroy($id)
 {
     try {
-        // Rechercher l'nformation par son identifiant
+        // Rechercher l'information par son identifiant
         $information = Information_Planification_Familiale::findOrFail($id);
 
         if (!$information) {
@@ -216,14 +220,22 @@ class InformationPlanificationFamilialeController extends Controller
                         ], 404);
                     }
             
-                    // Vérifier si l'utilisateur authentifié a le rôle 'admin' et s'il est l'auteur de la inform
+                    // Vérifier si l'utilisateur authentifié a le rôle 'admin' et s'il est l'auteur de l'information.
                     $user = auth()->user();
                     if ($user->role === 'admin' && $user->id === $information->admin_id) {
-                        // Supprimer l'image associée à la inform si elle existe
+                        // Supprimer l'image associée à l'information si elle existe
                         if ($information->image) {
                             $imagePath = public_path('images') . '/' . $information->image;
                             if (file_exists($imagePath)) {
                                 unlink($imagePath);
+                            }
+                        }
+
+                        // Supprimer le document associé à l'information s'il existe
+                        if ($information->document) {
+                            $pdfPath = public_path('pdf_files') . '/' . $information->document;
+                            if (file_exists($pdfPath)) {
+                                unlink($pdfPath);
                             }
                         }
             

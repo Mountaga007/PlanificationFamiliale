@@ -52,9 +52,9 @@ Route::get('detail_information/{id}', [InformationPlanificationFamilialeControll
 
 Route::middleware(['auth:api', 'role:personnelsante'])->group(function () {
     Route::post('enregistrer_Dossier_Medical', [DossierMedicalController::class, 'store']);
-    Route::put('/update_DM/{dossier_Medical}', [DossierMedicalController::class, 'update']);
-    Route::post('recherche', [DossierMedicalController::class, 'recherche']);
-    Route::post('archiver_DM/{dossier_Medical}', [DossierMedicalController::class, 'destroy']);
+    Route::post('/update_DM/{dossier_Medical}', [DossierMedicalController::class, 'update']);
+    Route::post('recherche_DM', [DossierMedicalController::class, 'recherche']);
+    Route::delete('archiver_DM/{dossier_Medical}', [DossierMedicalController::class, 'destroy']);
 
     Route::get('listes_ressource', [RessourcePlanificationFamilialeController::class, 'index']);
     Route::get('details_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'show']);
@@ -72,20 +72,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('create_forum', [ForumCommunicationController::class, 'store']);
     Route::get('liste_forum', [ForumCommunicationController::class, 'index']);
     Route::get('detail_forum/{id}', [ForumCommunicationController::class, 'show']);
-    Route::put('update_forum/{forum_Communication}', [ForumCommunicationController::class, 'update']);
+    Route::post('update_forum/{forum_Communication}', [ForumCommunicationController::class, 'update']);
     Route::delete('supprimer_forum/{id}', [ForumCommunicationController::class, 'destroy']);
-    Route::get('liste_commentaire', [CommentaireController::class, 'index']);
     Route::get('Detail_commentaire_un_forum/{forumId}', [CommentaireController::class, 'show']);
     Route::delete('supprimer_commentaire/{id}', [CommentaireController::class, 'destroy']);
 
     Route::post('creer_commentaire_forum/{forumId}', [CommentaireController::class, 'participerForum']);
-    Route::put('update_commentaire/{commentaire}', [CommentaireController::class, 'update']);
+    Route::post('update_commentaire/{commentaire}', [CommentaireController::class, 'update']);
     Route::post('calculer_periode_ovulation', [CalculPeriodeOvulationController::class, 'calculateOvulation']);
-});
-
-Route::middleware(['auth:api', 'role:patiente'])->group(function () {
-    Route::post('whatsapps.patiente/{id}', [ContacterController::class, 'redirigerWhatsApp']);
-
 });
 
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
@@ -97,13 +91,12 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::put('invalider/{id}', [AdminController::class, 'invaliderInscription']);
     Route::post('create_ressource', [RessourcePlanificationFamilialeController::class, 'store']);
     Route::post('create_information', [InformationPlanificationFamilialeController::class, 'store']);
-    Route::put('update_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'update']);
-    Route::put('update_information/{id}', [InformationPlanificationFamilialeController::class, 'update']);
+    Route::post('update_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'update']);
+    Route::post('update_information/{id}', [InformationPlanificationFamilialeController::class, 'update']);
     Route::delete('supprimer_information/{id}', [InformationPlanificationFamilialeController::class, 'destroy']);
     Route::delete('supprimer_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'destroy']);
     Route::get('liste_message', [ContacterController::class, 'index']);
     Route::delete('supprimer_message/{contacter}', [ContacterController::class, 'destroy']);
-    Route::delete('supprimer_forums/{id}', [ForumCommunicationController::class, 'destroy']);
 
     Route::get('liste_ressource', [RessourcePlanificationFamilialeController::class, 'index']);
     Route::get('detail_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'show']);
@@ -113,9 +106,6 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::get('/Detail_DM/{dossierMedical}', [DossierMedicalController::class, 'show']);
     Route::post('telecharger_DM/{id}', [DossierMedicalController::class, 'telechargerDossier']);
     
-    Route::post('liste_message', [ContacterController::class, 'contacter_admin']);
-
-
-   // Route::delete('supprimer_commentaire/{id}', [CommentaireController::class, 'destroy']);
+   Route::delete('supprimer_commentaire_admin/{id}', [CommentaireController::class, 'destroy']);
 
 });

@@ -65,10 +65,10 @@
                     <img src="https://ibb.co/LdtsV8d" class="img-fluid rounded-start" alt="...">
                 </div>
                 <div class="col-md-6 colAuth rounded-end">
-                    <div class="card-body">
+                    <div class="card-body"> 
                         <h3 class="card-title text-center">VALIDATION DE COMPTE</h3>
                         <div class="text-center">
-                            <img src=" " alt="Logo Planification Familiale, DEBBO" class="logo">
+                            <img src="https://ibb.co/LdtsV8d" alt="Logo Planification Familiale, DEBBO" class="logo">
                         </div>
                             <div>
                                 <p class="fs-5 mt-4">Bonjour {{ $nom }} ,</p>

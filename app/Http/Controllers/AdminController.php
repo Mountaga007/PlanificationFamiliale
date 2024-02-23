@@ -78,6 +78,15 @@ public function invaliderInscription($id)
             // Invalider l'inscription en mettant à jour le statut
             $user->update(['statut_compte' => false]);
 
+             // Envoi de l'email de confirmation
+             Mail::send('emailInvalidation',[
+                'nom' => $user->nom,
+            ],
+             function ($message) use ($user) {
+                $message->to($user->email);
+                $message->subject('Notification de validation d\'inscription');
+            });
+
             return response()->json([
                 'code_valide' => 200,
                 'message' => "Inscription invalidée avec succès.",

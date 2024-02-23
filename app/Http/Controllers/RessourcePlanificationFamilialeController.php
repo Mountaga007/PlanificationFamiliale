@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\storeRessourceRequest;
-use App\Models\Ressource_Planification_familiale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\storeRessourceRequest;
+use App\Models\Ressource_Planification_familiale;
+use App\Http\Requests\storeUpdateRessourcePFRequest;
 
 class RessourcePlanificationFamilialeController extends Controller
 {
@@ -60,7 +61,7 @@ class RessourcePlanificationFamilialeController extends Controller
                 'texte' => $request->texte,
             ]);
     
-            // Gérer l'image s'il y en a une
+            // Gérer l'image s'il y en a une.
             if ($request->hasFile('image')) {
                 $imageFile = $request->file('image');
                 $filename = date('YmdHi') . $imageFile->getClientOriginalName();
@@ -68,7 +69,7 @@ class RessourcePlanificationFamilialeController extends Controller
                 $ressource->image = $filename;
             }
     
-            // Gérer le fichier PDF s'il y en a un
+            // Gérer le fichier PDF s'il y en a un.
             if ($request->hasFile('document')) {
                 $pdfFile = $request->file('document');
                 $pdfFilename = date('YmdHi') . $pdfFile->getClientOriginalName();
@@ -149,7 +150,7 @@ class RessourcePlanificationFamilialeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(storeUpdateRessourcePFRequest $request, $id)
 {
     try {
         $ressource_Planification_familiale = Ressource_Planification_familiale::find($id);
@@ -161,16 +162,10 @@ class RessourcePlanificationFamilialeController extends Controller
                 'message' => 'Ressource non trouvée.',
             ], 404);
         }
-
+        
         // Vérifier si l'utilisateur authentifié a le rôle 'admin' et s'il est l'auteur de la ressource
-        if (Auth::user()->role === 'admin' && Auth::id() === $ressource_Planification_familiale->admin_id) {
-           // Valider les données du formulaire
-            $request->validate([
-                'titre' => ['required', 'string'],
-                'texte' => ['required', 'string'],
-                'image' => ['image', 'mimes:jpeg,png,jpg,gif'],
-            ]);
-
+        if (auth()->user()->role == 'admin' && Auth::id() === $ressource_Planification_familiale->admin_id) {
+          
             // Mettre à jour les attributs de la ressource
             $ressource_Planification_familiale->titre = $request->titre;
             $ressource_Planification_familiale->texte = $request->texte;
@@ -181,6 +176,14 @@ class RessourcePlanificationFamilialeController extends Controller
                 $filename = date('YmdHi') . $imageFile->getClientOriginalName();
                 $imageFile->move(public_path('images'), $filename);
                 $ressource_Planification_familiale->image = $filename;
+            }
+
+            // Mettre à jour le document si il est fourni
+            if ($request->file('document')) {
+                $pdfFile = $request->file('document');
+                $pdfFilename = date('YmdHi') . $pdfFile->getClientOriginalName();
+                $pdfFile->move(public_path('pdf_files'), $pdfFilename);
+                $ressource_Planification_familiale->document = $pdfFilename;
             }
 
             // Sauvegarder les modifications
@@ -233,6 +236,14 @@ class RessourcePlanificationFamilialeController extends Controller
                 $imagePath = public_path('images') . '/' . $ressource->image;
                 if (file_exists($imagePath)) {
                     unlink($imagePath);
+                }
+            }
+
+            // Supprimer le document associé à la ressource s'il existe
+            if ($ressource->document) {
+                $pdfPath = public_path('pdf_files') . '/' . $ressource->document;
+                if (file_exists($pdfPath)) {
+                    unlink($pdfPath);
                 }
             }
 

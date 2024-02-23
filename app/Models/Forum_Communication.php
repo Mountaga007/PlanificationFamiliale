@@ -18,7 +18,7 @@ class Forum_Communication extends Model
 
     public function user()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function commentaires()

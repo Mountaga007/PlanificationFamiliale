@@ -25,7 +25,7 @@ class storeUtilisateurRequest extends FormRequest
                 'nom' => ['required', 'string', 'min:2', 'max:50'],
                 'email' => ['required', 'email', 'unique:users,email'],
                 'password' => ['required', 'string','unique:users,password','min:8', 'max:30'],
-                'telephone' => ['required', 'unique:users,telephone','regex:/^00221(77|78|76|75|70)\d{7}$/'],
+                'telephone' => ['required', 'unique:users,telephone','regex:/^(70|75|76|77|78)[0-9]{7}$/'],
                 'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
         ];
     }
@@ -45,7 +45,7 @@ class storeUtilisateurRequest extends FormRequest
             "password.min" => 'Le password doit être composé de lettres, de chiffres et d\'espaces (au moins 8 caractères)',
             "password.max" => 'Le password doit être composé de lettres, de chiffres et d\'espaces (au plus 30 caractères)',
             "telephone.required" => 'Le telephone est requis',
-            "telephone.regex" => 'Format telephone incorrect, ex: 00221771234567',
+            "telephone.regex" => 'Format telephone incorrect, ex: 771234567',
             "telephone.unique" => 'Le telephone existe déjà',
             "image.image" => 'Veuillez entrer une image valide, le format de l\' image doit etre de format : jpeg,png,jpg,gif,svg',
             "image.mimes" => 'Format de l\' image incorrect, le format de l\' image doit etre de format : jpeg,png,jpg,gif,svg',

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\storeCommentaireRequest;
+use App\Http\Requests\storeUpdateCommentaireRequest;
 use App\Models\Commentaire;
 use App\Models\Forum_Communication;
 use Illuminate\Http\Request;
@@ -15,45 +16,7 @@ class CommentaireController extends Controller
      */
     public function index()
 {
-    try {
-        // Récupérer la liste de tous les forums
-        $forums = Forum_Communication::all();
-
-        // Initialiser un tableau pour stocker les données
-        $forumsData = [];
-
-        // Boucler à travers chaque forum
-        foreach ($forums as $forum) {
-            // Récupérer les données du forum
-            $forumData = [
-                'id' => $forum->id,
-                'titre' => $forum->titre,
-                'texte' => $forum->texte,
-                'image' => $forum->image,
-            ];
-
-            // Récupérer la liste des commentaires pour le forum spécifié avec le nom de l'utilisateur
-            $commentaires = Commentaire::where('forum_communication_id', $forum->id)
-                ->with('user:id,nom') // Charger uniquement l'id et le nom de l'utilisateur associé au commentaire
-                ->get();
-
-            // Ajouter les commentaires au tableau de données du forum
-            $forumData['commentaires'] = $commentaires;
-
-            // Ajouter les données du forum au tableau principal
-            $forumsData[] = $forumData;
-        }
-
-        return response()->json([
-            'message' => 'Liste des forums avec commentaires récupérée avec succès.',
-            'forums' => $forumsData,
-        ], 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Une erreur s\'est produite lors de la récupération des données des forums et des commentaires.',
-            'error' => $e->getMessage(),
-        ], 500);
-    }
+   //
 }
 
 
@@ -86,7 +49,6 @@ class CommentaireController extends Controller
 
             return response()->json([
                 'message' => 'Commentaire ajouté avec succès.',
-                'commentaire' => $commentaire,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -116,33 +78,43 @@ class CommentaireController extends Controller
      * Display the specified resource.
      */
     public function show($forumId)
-{
-    try {
-        // Vérifier si le forum existe
-        $forum = Forum_Communication::findOrFail($forumId);
-
-        $commentaires = Commentaire::where('forum_communication_id', $forum->id)
-    ->with(['user' => function($query) {
-        $query->select('id', 'nom'); // Sélectionner uniquement l'ID et le nom de l'utilisateur
-    }])
-    ->get(['texte', 'user_id']);
-
-        return response()->json([
-            'message' => 'Liste des commentaires récupérée avec succès.',
-            'forum' => [
-                'titre' => $forum->titre,
-                'texte' => $forum->texte,
-                'image' => $forum->image,
-            ],
-            'commentaires' => $commentaires,
-        ], 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Une erreur s\'est produite lors de la récupération des données du forum et des commentaires.',
-            'error' => $e->getMessage(),
-        ], 500);
+    {
+        try {
+            // Vérifier si le forum existe
+            $forum = Forum_Communication::findOrFail($forumId);
+    
+            // Récupérer les commentaires avec les noms des utilisateurs
+            $commentaires = Commentaire::where('forum_communication_id', $forum->id)
+                ->with(['user:id,nom']) // Sélectionner uniquement l'ID et le nom de l'utilisateur
+                ->get(['texte', 'user_id']);
+    
+            // Formater les données pour la réponse
+            $formattedCommentaires = $commentaires->map(function ($commentaire) {
+                return [
+                    'texte' => $commentaire->texte,
+                    'nom_auteur' => $commentaire->user->nom,
+                ];
+            });
+    
+            return response()->json([
+                'message' => 'Liste des commentaires récupérée avec succès.',
+                'forum' => [
+                    'titre' => $forum->titre,
+                    'texte' => $forum->texte,
+                    'image' => $forum->image,
+                ],
+                'commentaires' => $formattedCommentaires,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite lors de la récupération des données du forum et des commentaires.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-}
+    
+
+    
 
 
 
@@ -158,7 +130,7 @@ class CommentaireController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Commentaire $commentaire)
+    public function update(storeUpdateCommentaireRequest $request, Commentaire $commentaire)
 {
     try {
         // Vérifiez si l'utilisateur authentifié est le propriétaire du commentaire
@@ -169,11 +141,6 @@ class CommentaireController extends Controller
                 'message' => 'Accès non autorisé. Vous n\'êtes pas autorisé à mettre à jour ce commentaire.',
             ], 403);
         }
-
-        // Validate the request data
-        $request->validate([
-            'texte' => ['required', 'string'],
-        ]);
 
         // Update the comment text
         $commentaire->texte = $request->texte;
@@ -203,8 +170,8 @@ class CommentaireController extends Controller
             // Vérifier si le commentaire existe
             $commentaire = Commentaire::findOrFail($id);
 
-            // Vérifier si l'utilisateur authentifié est l'auteur du commentaire
-            if ($commentaire->user_id != auth()->user()->id) {
+            // Vérifier si l'utilisateur authentifié est l'auteur du commentaire ou s'il a le rôle d'administrateur
+            if (!($commentaire->user_id == auth()->user()->id || auth()->user()->role == 'admin')) {
                 return response()->json([
                     'message' => 'Vous n\'êtes pas autorisé à supprimer ce commentaire.',
                 ], 403);

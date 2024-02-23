@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -23,16 +24,16 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function login()
+    public function login(User $user)
 {
     $credentials = request(['email', 'password']);
 
     if (! $token = auth()->attempt($credentials)) {
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return response()->json(['error' => 'Mot de passe ou email incorrect, veuillez réessayer'], 401);
     }
 
     // Récupérer l'utilisateur connecté
-    $user = auth()->user();
+    $user = Auth::user();
 
     // Vérifier le statut du compte pour les utilisateurs de type 'personnelsante'
     if ($user->role === 'personnelsante' && $user->statut_compte === 0) {
@@ -41,7 +42,7 @@ class AuthController extends Controller
         return response()->json(['error' => 'Votre compte n\'a pas encore été validé. Veuillez réessayer plus tard.'], 401);
     }
 
-    return $this->respondWithToken($token);
+    return $this->respondWithToken([$token, $user]);
 }
 
 

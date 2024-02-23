@@ -14,6 +14,8 @@ class ContacterController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+         //Liste des messages de l'utilisateur pour l'admin
     public function index()
     {
         try {
@@ -41,16 +43,15 @@ class ContacterController extends Controller
                 throw new Exception('L\'ID doit être numérique.');
             }
 
-            $patiente = User::findOrFail($id);
+            $utilisateur = User::findOrFail($id);
 
-            $numeroOriginal = $patiente->telephone;
-            $numeroWhatsApp = preg_replace('/[^0-9]/', '', $numeroOriginal);
+            $numeroOriginal = $utilisateur->telephone;
 
-            if (empty($numeroWhatsApp)) {
-                throw new Exception("Numéro de téléphone non valide. Numéro original : $numeroOriginal, Numéro nettoyé : $numeroWhatsApp");
+            if (empty($numeroOriginal)) {
+                throw new Exception("Numéro de téléphone non valide. Numéro original : $numeroOriginal, Numéro nettoyé : $numeroOriginal");
             }
 
-            $urlWhatsApp = "https://api.whatsapp.com/send?phone=$numeroWhatsApp";
+            $urlWhatsApp = "https://api.whatsapp.com/send?phone=$numeroOriginal";
 
             return redirect()->to($urlWhatsApp);
         } catch (ModelNotFoundException $e) {
@@ -107,39 +108,6 @@ class ContacterController extends Controller
     public function edit(Contacter $contacter)
     {
         //
-    }
-
-
-    //Liste des messages de l'utilisateur pour l'admin
-    public function contacter_admin()
-        {
-        try {
-            // Récupérer l'utilisateur authentifié
-            $user = auth()->user();
-
-            // Vérifier si l'utilisateur est authentifié
-        if (!$user) {
-            return response()->json([
-                'code_valide' => 401,
-                'message' => 'Utilisateur non authentifié.',
-            ], 401);
-        }
-
-            // Récupérer les messages de l'utilisateur pour l'admin
-            $messages = Contacter::where('user_id', $user->id)->get();
-
-            return response()->json([
-                'code_valide' => 200,
-                'message' => 'Liste des messages de l\'utilisateur récupérée avec succès.',
-                'liste_des_messages' => $messages,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'code_valide' => 500,
-                'message' => 'Erreur lors de la récupération des messages de l\'utilisateur.',
-                'error' => $e->getMessage(),
-            ]);
-        }
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\storeForumCommunicationRequest;
+use App\Http\Requests\storeUpdateForumCommunicationRequest;
 use App\Models\Forum_Communication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,11 +16,12 @@ class ForumCommunicationController extends Controller
     public function index()
     {
         try {
-            $forums = Forum_Communication::all();
+            $forums = Forum_Communication::with('user:id,nom')->get();
 
             return response()->json([
                 'message' => 'Liste des forums récupérée avec succès.',
-                'forums' => $forums,
+                'Le contenu des forums' => $forums,
+                
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -94,7 +96,8 @@ class ForumCommunicationController extends Controller
 
         return response()->json([
             'message' => 'Détails du forum récupérés avec succès.',
-            'forum' => $forum,
+            'Les détails du forum' => $forum,
+            'L\'auteur de ce forum' => Auth::user(),
         ], 200);
     } catch (\Exception $e) {
         return response()->json([
@@ -116,14 +119,9 @@ class ForumCommunicationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $forum_Communication)
+    public function update(storeUpdateForumCommunicationRequest $request, $forum_Communication)
     {
         try {
-            // $request->validate([
-            //     'titre' => ['required', 'string'],
-            //     'texte' => ['required', 'string'],
-            //     'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
-            // ]);
     
             $forum = Forum_Communication::findOrFail($forum_Communication);
 
@@ -131,7 +129,7 @@ class ForumCommunicationController extends Controller
         if (!($forum->user_id == auth()->user()->id)) {
             return response()->json([
                 'code_valide' => 403, // Statut HTTP 403: Accès interdit
-                'message' => 'Vous n\'avez pas la permission de supprimer ce forum.',
+                'message' => 'Vous n\'avez pas la permission de mettre à jour ce forum car vous n\'êtes pas l\'auteur de ce forum.',
             ], 403);
         }
 
@@ -180,8 +178,16 @@ class ForumCommunicationController extends Controller
         if (!($forum->user_id == auth()->user()->id || auth()->user()->role == 'admin')) {
             return response()->json([
                 'code_valide' => 403, // Statut HTTP 403: Accès interdit
-                'message' => 'Vous n\'avez pas la permission de supprimer ce forum.',
+                'message' => 'Vous n\'avez pas la permission de supprimer ce forum car vous n\'êtes pas l\'auteur de ce forum.',
             ], 403);
+        }
+
+         // Supprimer l'image associée au forum
+         if (!empty($forum->image)) {
+            $imagePath = public_path('images') . '/' . $forum->image;
+            if (file_exists($imagePath)) {
+                unlink($imagePath); // Supprimer le fichier
+            }
         }
 
         //Supprimer le forum
