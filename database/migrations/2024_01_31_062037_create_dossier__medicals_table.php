@@ -24,7 +24,6 @@ return new class extends Migration
             $table->boolean('poste_avortement')->default(false);
             $table->boolean('poste_partum')->default(false);
             $table->enum('methode_en_cours', ['pilule','dui','injection','implant','anneau_vaginale_a_progresterone','condom','cu'])->nullable();
-            $table->enum('methode', ['pilule','dui','injection','implant','anneau_vaginale_a_progresterone','condom','cu'])->nullable();
             $table->enum('methode_choisie', ['pilule','dui','injection','implant','anneau_vaginale_a_progresterone','condom','cu'])->nullable();
             $table->string('preciser_autres_methodes')->nullable(); 
             $table->string('raison_de_la_visite')->nullable();

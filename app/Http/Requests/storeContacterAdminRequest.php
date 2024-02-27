@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class storeContacterAdminRequest extends FormRequest
 {
@@ -23,7 +25,7 @@ class storeContacterAdminRequest extends FormRequest
     {
         return [
 
-            'nom' => ['required', 'string', 'min:2', 'max:50'],
+            'nom' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
             'email' => ['required', 'email', 'unique:contacters,email'],
             'message' => ['required', 'string', 'min:2', 'max:500'],
         ];
@@ -33,7 +35,7 @@ class storeContacterAdminRequest extends FormRequest
     {
         return [
             "nom.required" => 'Le nom est requis',
-            "nom.string" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+            "nom.regex" => 'Le nom doit être composé de lettres, d\'espaces et des caractères spéciaux (au moins 2 caractères)',
             "nom.min" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',           
             "nom.max" => 'Le nom doit être composé de lettres et d\'espaces (au plus 50 caractères)',
             "email.required" => 'L\'email est requise',
@@ -44,5 +46,15 @@ class storeContacterAdminRequest extends FormRequest
             "message.min" => 'Le message doit être composé de lettres, de chiffres et d\'espaces (au moins 2 caractères)',           
             "message.max" => 'Le message doit être composé de lettres, de chiffres et d\'espaces (au plus 500 caractères)',
         ];
+    }
+
+    
+protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors();
+
+        throw new HttpResponseException(response()->json([
+            'errors' => $errors,
+        ], 422));
     }
 }

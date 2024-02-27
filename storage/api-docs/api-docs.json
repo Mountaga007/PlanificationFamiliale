@@ -95,8 +95,8 @@
                                 }
                             },
                             "example": {
-                                "email": "mountaga889@gmail.com",
-                                "password": "mountaga123"
+                                "email": "mountaga007@hotmail.com",
+                                "password": "mountaga007@"
                             }
                         }
                     }
@@ -157,7 +157,7 @@
                 ]
             }
         },
-        "/api/valider/{id}": {
+        "/api/valider/11": {
             "put": {
                 "summary": "Valider le compte du Personnel de santé",
                 "description": "",
@@ -447,8 +447,8 @@
                                 }
                             },
                             "example": {
-                                "dateRegles": "2024-02-05",
-                                "dureeCycle": "45"
+                                "dateRegles": "2024-02-15",
+                                "dureeCycle": "78"
                             }
                         }
                     }
@@ -607,7 +607,7 @@
         },
         "/api/liste_utilisateur_DM": {
             "get": {
-                "summary": "Liste des utilisateurs avec un dossier médical pour l'admin",
+                "summary": "Liste des utilisateurs avec un dossier médical",
                 "description": "",
                 "responses": {
                     "200": {
@@ -639,12 +639,17 @@
                     }
                 },
                 "tags": [
-                    "Gestion des dossiers médical pour personnel de santé"
+                    "Gestion des utilisateurs"
                 ],
                 "parameters": [
                     {
                         "in": "header",
                         "name": "User-Agent",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
                         "type": "string"
                     }
                 ]
@@ -732,13 +737,13 @@
                                 }
                             },
                             "example": {
-                                "nom": "Aissatou Diouldé Ly",
-                                "email": "aissatoudiouldely77@gmail.com",
-                                "password": "aissatoudiouldely77@",
-                                "telephone": "770147896",
-                                "matricule": "A779DLTOU89",
-                                "structure": "Principal",
-                                "service": "Femme santé"
+                                "nom": "Thierno Sidy BA",
+                                "email": "mountaga007@hotmail.com",
+                                "password": "mountaga007@",
+                                "telephone": "769874532",
+                                "matricule": "M587T0111",
+                                "structure": "FANN",
+                                "service": "MALADIE"
                             }
                         }
                     }
@@ -822,9 +827,9 @@
                                 }
                             },
                             "example": {
-                                "nom": "98468531",
-                                "email": "aboubaarye34@gmail.com",
-                                "password": "aboubacrleye34@",
+                                "nom": "afrfa zefz",
+                                "email": "aboubaaye34@gmail.com",
+                                "password": "aboubacrlye34@",
                                 "telephone": "781132610",
                                 "image": {
                                     "type": "string",
@@ -965,12 +970,12 @@
             }
         },
         "/api/update_information/{id}": {
-            "put": {
+            "post": {
                 "summary": "Update information",
                 "description": "",
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -978,8 +983,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "400": {
+                        "description": "Bad Request",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -987,8 +992,17 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorize",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -1019,7 +1033,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/x-www-form-urlencoded": {
+                        "multipart/form-data": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
@@ -1040,8 +1054,8 @@
                                 }
                             },
                             "example": {
-                                "titre": "Famille Famille",
-                                "texte": "Planification Planification",
+                                "titre": "Mise à jour Famille",
+                                "texte": "Update Planification",
                                 "image": {
                                     "type": "string",
                                     "format": "binary"
@@ -1057,12 +1071,12 @@
             }
         },
         "/api/update_ressource/{id}": {
-            "put": {
+            "post": {
                 "summary": "Update ressource",
                 "description": "",
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -1070,8 +1084,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "400": {
+                        "description": "Bad Request",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -1079,8 +1093,17 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorize",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -1111,7 +1134,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/x-www-form-urlencoded": {
+                        "multipart/form-data": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
@@ -1228,8 +1251,8 @@
                                 }
                             },
                             "example": {
-                                "titre": "Familiale 5",
-                                "texte": "Plani 5",
+                                "titre": "Familiale n",
+                                "texte": "Plani n",
                                 "image": {
                                     "type": "string",
                                     "format": "binary"
@@ -1324,8 +1347,8 @@
                                 }
                             },
                             "example": {
-                                "titre": "pdf n",
-                                "texte": "pdf pdf pdf n",
+                                "titre": "pdf troisieme",
+                                "texte": "pdf pdf pdf 2",
                                 "image": {
                                     "type": "string",
                                     "format": "binary"
@@ -1764,12 +1787,12 @@
             }
         },
         "/api/update_DM/{dossier_Medical}": {
-            "put": {
+            "post": {
                 "summary": "Update d'une dossier médical",
                 "description": "",
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -1777,8 +1800,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "400": {
+                        "description": "Bad Request",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -1786,8 +1809,17 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorize",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -1809,14 +1841,34 @@
                         "in": "header",
                         "name": "User-Agent",
                         "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "type": "string"
                     }
                 ],
                 "requestBody": {
                     "content": {
-                        "application/x-www-form-urlencoded": {
+                        "multipart/form-data": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
+                                    "prenom": {
+                                        "type": "string"
+                                    },
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "telephone": {
+                                        "type": "string"
+                                    },
+                                    "adresse": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
                                     "statut": {
                                         "type": "string"
                                     },
@@ -1862,20 +1914,25 @@
                                 }
                             },
                             "example": {
-                                "statut": "Ancien",
-                                "numero_Identification": "875",
-                                "age": "69",
-                                "poste_avortement": "0",
+                                "prenom": "Mariama Diouldé",
+                                "nom": "Diallo",
+                                "telephone": "789654125",
+                                "adresse": "inconnu",
+                                "email": "mariyaya983@gmail.com",
+                                "statut": "Nouveau patiente",
+                                "numero_Identification": "888888",
+                                "age": "35",
+                                "poste_avortement": "1",
                                 "poste_partum": "0",
-                                "methode_en_cours": "implant",
+                                "methode_en_cours": "dui",
                                 "methode": "implant",
-                                "methode_choisie": "implant",
-                                "preciser_autres_methodes": "implant",
-                                "raison_de_la_visite": "bien",
-                                "indication": "bien",
-                                "effets_indesirables_complications": "not",
-                                "date_visite": "2024-05-25",
-                                "date_prochain_rv": "2024-08-14"
+                                "methode_choisie": "injection",
+                                "preciser_autres_methodes": "Utiliser une autre méthode",
+                                "raison_de_la_visite": "aucun",
+                                "indication": "Nice",
+                                "effets_indesirables_complications": "pas effet",
+                                "date_visite": "2024-05-12",
+                                "date_prochain_rv": "2024-10-25"
                             }
                         }
                     }
@@ -2040,6 +2097,21 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
+                                    "prenom": {
+                                        "type": "string"
+                                    },
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "telephone": {
+                                        "type": "string"
+                                    },
+                                    "adresse": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
                                     "statut": {
                                         "type": "string"
                                     },
@@ -2081,28 +2153,29 @@
                                     },
                                     "date_prochain_rv": {
                                         "type": "string"
-                                    },
-                                    "id": {
-                                        "type": "string"
                                     }
                                 }
                             },
                             "example": {
-                                "statut": "Nouveau patient Leye",
-                                "numero_Identification": "777",
-                                "age": "25",
+                                "prenom": "Ramata",
+                                "nom": "BA",
+                                "telephone": "781605807",
+                                "adresse": "Cité",
+                                "email": "ramabasidy1993@gmail.com",
+                                "statut": "Patiente",
+                                "numero_Identification": "787",
+                                "age": "35",
                                 "poste_avortement": "1",
-                                "poste_partum": "1",
+                                "poste_partum": "0",
                                 "methode_en_cours": "dui",
                                 "methode": "implant",
                                 "methode_choisie": "injection",
-                                "preciser_autres_methodes": "injection",
-                                "raison_de_la_visite": "Utiliser une nou méthode",
+                                "preciser_autres_methodes": "Utiliser une nou méthode",
+                                "raison_de_la_visite": "aucun",
                                 "indication": "Nice",
                                 "effets_indesirables_complications": "pas effet",
                                 "date_visite": "2024-05-12",
-                                "date_prochain_rv": "2024-10-25",
-                                "id": "11"
+                                "date_prochain_rv": "2024-10-25"
                             }
                         }
                     }
@@ -2110,12 +2183,12 @@
             }
         },
         "/{id}": {
-            "post": {
+            "get": {
                 "summary": "Envoyer un message via WhatSapp",
                 "description": "",
                 "responses": {
-                    "201": {
-                        "description": "Created successfully",
+                    "200": {
+                        "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -2123,8 +2196,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "404": {
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -2132,17 +2205,8 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": ""
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Unauthorize",
+                    "500": {
+                        "description": "Internal Server Error",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -2294,8 +2358,8 @@
                                 }
                             },
                             "example": {
-                                "nom": "Bourama Ngom",
-                                "email": "bouramangom@gmail.com",
+                                "nom": "Bouramà Ngùm 52",
+                                "email": "buramang@gmail.com",
                                 "message": "SOS1 SOS1 SOS1"
                             }
                         }
@@ -2481,7 +2545,7 @@
                                 }
                             },
                             "example": {
-                                "texte": "Supprimer commentaire pour le forum 5"
+                                "texte": "Elément très important, ça c 2"
                             }
                         }
                     }
@@ -2548,12 +2612,12 @@
             }
         },
         "/api/update_commentaire/{commentaire}": {
-            "put": {
+            "post": {
                 "summary": "Update un commentaire sur un forum",
                 "description": "",
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -2561,8 +2625,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "400": {
+                        "description": "Bad Request",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -2570,8 +2634,17 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorize",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -2597,7 +2670,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/x-www-form-urlencoded": {
+                        "multipart/form-data": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
@@ -2607,7 +2680,7 @@
                                 }
                             },
                             "example": {
-                                "texte": "Modification Premier commentaire pour le forum 5"
+                                "texte": "Pourquoi ce forum"
                             }
                         }
                     }
@@ -2685,8 +2758,8 @@
                                 }
                             },
                             "example": {
-                                "titre": "forum 2",
-                                "texte": "texte forum 2",
+                                "titre": "forum Final",
+                                "texte": "texte forum final",
                                 "image": {
                                     "type": "string",
                                     "format": "binary"
@@ -2793,12 +2866,12 @@
             }
         },
         "/api/update_forum/{forum_Communication}": {
-            "put": {
+            "post": {
                 "summary": "Update forum",
                 "description": "",
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -2806,8 +2879,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "400": {
+                        "description": "Bad Request",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -2815,8 +2888,17 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Internal Server Error",
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorize",
                         "content": {
                             "application/json": {
                                 "schema": {},
@@ -2842,7 +2924,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/x-www-form-urlencoded": {
+                        "multipart/form-data": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
@@ -2859,8 +2941,8 @@
                                 }
                             },
                             "example": {
-                                "titre": "forrun 3",
-                                "texte": "texte forum 3",
+                                "titre": "forrun last",
+                                "texte": "texte forum last",
                                 "image": {
                                     "type": "string",
                                     "format": "binary"

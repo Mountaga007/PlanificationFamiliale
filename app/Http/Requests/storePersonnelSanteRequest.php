@@ -24,7 +24,7 @@ class storePersonnelSanteRequest extends FormRequest
     public function rules(): array
     {
         return [
-                'nom' => ['required', 'string', 'regex:/^[a-zA-Z\s]*$/', 'min:2', 'max:50'],
+                'nom' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
                 'email' => ['required', 'email', 'unique:users,email'],
                 'password' => ['required', 'string','unique:users,password','min:8', 'max:30'],
                 'telephone' => ['required', 'unique:users,telephone','regex:/^(70|75|76|77|78)[0-9]{7}$/'],
@@ -38,8 +38,7 @@ class storePersonnelSanteRequest extends FormRequest
     {
         return [
             "nom.required" => 'Le nom est requis',
-            "nom.string" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
-            "nom.regex" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+            "nom.regex" => 'Le nom doit être composé de lettres, d\'espaces et des caractères speciaux (au moins 2 caractères)',
             "nom.min" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',           
             "nom.max" => 'Le nom doit être composé de lettres et d\'espaces (au plus 50 caractères)',
             "email.required" => 'L\'email est requise',

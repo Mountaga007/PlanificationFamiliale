@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class storeCommentaireRequest extends FormRequest
 {
@@ -33,4 +35,13 @@ class storeCommentaireRequest extends FormRequest
             "texte.string" => 'Le texte doit être composé de lettres, de chiffres et d\'espaces.',
         ];
     }
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors();
+
+        throw new HttpResponseException(response()->json([
+            'errors' => $errors,
+        ], 422));
+    }
+    
         }

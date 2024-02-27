@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class storeUtilisateurRequest extends FormRequest
 {
@@ -22,7 +24,7 @@ class storeUtilisateurRequest extends FormRequest
     public function rules(): array
     {
         return [
-                'nom' => ['required', 'string', 'regex:/^[a-zA-Z\s]*$/', 'min:2', 'max:50'],                
+                'nom' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
                 'email' => ['required', 'email', 'unique:users,email'],
                 'password' => ['required', 'string','unique:users,password','min:8', 'max:30'],
                 'telephone' => ['required', 'unique:users,telephone','regex:/^(70|75|76|77|78)[0-9]{7}$/'],
@@ -34,8 +36,7 @@ class storeUtilisateurRequest extends FormRequest
     {
         return [
             "nom.required" => 'Le nom est requis',
-            "nom.string" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
-            "nom.regex" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+            "nom.regex" => 'Le nom doit être composé de lettres, d\'espaces et des caractères spéciaux (au moins 2 caractères)',
             "nom.min" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
             "nom.max" => 'Le nom doit être composé de lettres et d\'espaces (au plus 50 caractères)',
             "email.required" => 'L\'email est requise',
@@ -51,6 +52,16 @@ class storeUtilisateurRequest extends FormRequest
             "image.image" => 'Veuillez entrer une image valide, le format de l\' image doit etre de format : jpeg,png,jpg,gif,svg',
             "image.mimes" => 'Format de l\' image incorrect, le format de l\' image doit etre de format : jpeg,png,jpg,gif,svg',
         ];
+    }
+
+    public function failedValidation(Validator $validator){
+        throw new HttpResponseException(response()->json([
+            'succes' => false,
+            'status_code' => 422,
+            'error' => true,
+            'message' => 'Erreur de validation',
+            'errorsList' => $validator->errors()
+        ]));
     }
 
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class storeUpdateDossierMedicalRequest extends FormRequest
 {
@@ -22,8 +24,8 @@ class storeUpdateDossierMedicalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'prenom' => ['required', 'string', 'regex:/^[a-zA-Z\s]*$/', 'min:2', 'max:50'],
-            'nom' => ['required', 'string', 'regex:/^[a-zA-Z\s]*$/', 'min:2', 'max:50'],
+            'prenom' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
+            'nom' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
             'telephone' => ['required', 'unique:users,telephone','regex:/^(70|75|76|77|78)[0-9]{7}$/'],
             'adresse' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:users,email'],
@@ -48,13 +50,11 @@ class storeUpdateDossierMedicalRequest extends FormRequest
 {
     return [
         "prenom.required" => 'Le prenom est requis',
-        "prenom.string" => 'Le prenom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
-        "prenom.regex" => 'Le prenom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+        "prenom.regex" => 'Le prenom doit être composé de lettres, d\'espaces et des caractères speciaux (au moins 2 caractères)',
         "prenom.min" => 'Le prenom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
         "prenom.max" => 'Le prenom doit être composé de lettres et d\'espaces (au plus 50 caractères)',
         "nom.required" => 'Le nom est requis',
-        "nom.string" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
-        "nom.regex" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+        "nom.regex" => 'Le nom doit être composé de lettres, d\'espaces et des caractères speciaux (au moins 2 caractères)',
         "nom.min" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
         "nom.max" => 'Le nom doit être composé de lettres et d\'espaces (au plus 50 caractères)',
         "telephone.required" => 'Le telephone est requis',
@@ -94,5 +94,16 @@ class storeUpdateDossierMedicalRequest extends FormRequest
         "date_prochain_rv.date" => 'Le format de la date du prochain rendez-vous est incorrect. Utilisez le format YYYY-MM-DD.',
     ];
 }
+
+
+public function failedValidation(Validator $validator){
+        throw new HttpResponseException(response()->json([
+            'succes' => false,
+            'status_code' => 422,
+            'error' => true,
+            'message' => 'Erreur de validation',
+            'errorsList' => $validator->errors()
+        ]));
+    }
 
 }
