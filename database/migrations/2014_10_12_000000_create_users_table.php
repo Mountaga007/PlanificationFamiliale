@@ -22,9 +22,6 @@ return new class extends Migration
             $table->enum('role', ['utilisateur','personnelsante','admin'])->default('utilisateur');
             $table->boolean('statut_compte')->default(false);
 
-            // $table->unsignedBigInteger('dossier_medical_id');
-            // $table->foreign('dossier_medical_id')->references('id')->on('dossier__medicals')->onDelete('cascade');
-
             $table->rememberToken();
             $table->timestamps();
         });

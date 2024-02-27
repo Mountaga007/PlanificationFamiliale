@@ -10,6 +10,11 @@ class Dossier_Medical extends Model
     use HasFactory;
 
     protected $fillable = [
+        'prenom',
+        'nom',
+        'telephone',
+        'adresse',
+        'email',
         'statut',
         'numero_Identification',
         'age',
@@ -32,8 +37,8 @@ class Dossier_Medical extends Model
     }
 
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class, 'user_id');
+    // }
 }

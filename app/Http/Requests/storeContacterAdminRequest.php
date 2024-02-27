@@ -33,9 +33,9 @@ class storeContacterAdminRequest extends FormRequest
     {
         return [
             "nom.required" => 'Le nom est requis',
-            "nom.string" => 'Le nom doit être composé de lettres, de chiffres et d\'espaces (au moins 2 caractères)',
-            "nom.min" => 'Le nom doit être composé de lettres, de chiffres et d\'espaces (au moins 2 caractères)',           
-            "nom.max" => 'Le nom doit être composé de lettres, de chiffres et d\'espaces (au plus 50 caractères)',
+            "nom.string" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+            "nom.min" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',           
+            "nom.max" => 'Le nom doit être composé de lettres et d\'espaces (au plus 50 caractères)',
             "email.required" => 'L\'email est requise',
             "email.email" => 'Format email incorrect',
             "email.unique" => 'l\'email existe déjà',

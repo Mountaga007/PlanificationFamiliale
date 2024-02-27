@@ -100,7 +100,7 @@ class PersonnelSanteController extends Controller
         if ($personnelSante) {
             return response()->json([
                 "code_valide" => 200,
-                "message" => "Votre demande d'inscription a été soumise avec succès. Attendez la validation de l'administrateur.",
+                "message" => "Votre demande d'inscription a été soumise avec succès. Attendez la validation de l'administrateur et vous recevrez un mail avant de vous connecter a la plateforme. Merci de bien vouloir consulter votre boite mail pour vous connecter.",
             ], 200);
         } else {
             // En cas d'échec, supprimer l'utilisateur précédemment créé

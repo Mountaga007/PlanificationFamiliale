@@ -448,7 +448,7 @@
                             },
                             "example": {
                                 "dateRegles": "2024-02-05",
-                                "dureeCycle": "28"
+                                "dureeCycle": "45"
                             }
                         }
                     }
@@ -607,7 +607,7 @@
         },
         "/api/liste_utilisateur_DM": {
             "get": {
-                "summary": "Liste des utilisateurs avec un dossier médical",
+                "summary": "Liste des utilisateurs avec un dossier médical pour l'admin",
                 "description": "",
                 "responses": {
                     "200": {
@@ -639,17 +639,12 @@
                     }
                 },
                 "tags": [
-                    "Gestion des utilisateurs"
+                    "Gestion des dossiers médical pour personnel de santé"
                 ],
                 "parameters": [
                     {
                         "in": "header",
                         "name": "User-Agent",
-                        "type": "string"
-                    },
-                    {
-                        "in": "header",
-                        "name": "Authorization",
                         "type": "string"
                     }
                 ]
@@ -827,10 +822,10 @@
                                 }
                             },
                             "example": {
-                                "nom": "Khadidiatou Diop",
-                                "email": "khadidiatou75@gmail.com",
-                                "password": "khadidiatou75@",
-                                "telephone": "751236598",
+                                "nom": "98468531",
+                                "email": "aboubaarye34@gmail.com",
+                                "password": "aboubacrleye34@",
+                                "telephone": "781132610",
                                 "image": {
                                     "type": "string",
                                     "format": "binary"
@@ -1037,6 +1032,10 @@
                                     "image": {
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "document": {
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 }
                             },
@@ -1044,6 +1043,10 @@
                                 "titre": "Famille Famille",
                                 "texte": "Planification Planification",
                                 "image": {
+                                    "type": "string",
+                                    "format": "binary"
+                                },
+                                "document": {
                                     "type": "string",
                                     "format": "binary"
                                 }
@@ -1121,6 +1124,10 @@
                                     "image": {
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "document": {
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 }
                             },
@@ -1128,6 +1135,10 @@
                                 "titre": "Les biens fait de la planification familiale",
                                 "texte": "la planification a plusieurs  bien fait",
                                 "image": {
+                                    "type": "string",
+                                    "format": "binary"
+                                },
+                                "document": {
                                     "type": "string",
                                     "format": "binary"
                                 }
@@ -1209,13 +1220,21 @@
                                     "image": {
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "document": {
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 }
                             },
                             "example": {
-                                "titre": "Familiale",
-                                "texte": "Plani",
+                                "titre": "Familiale 5",
+                                "texte": "Plani 5",
                                 "image": {
+                                    "type": "string",
+                                    "format": "binary"
+                                },
+                                "document": {
                                     "type": "string",
                                     "format": "binary"
                                 }
@@ -1297,13 +1316,21 @@
                                     "image": {
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "document": {
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 }
                             },
                             "example": {
-                                "titre": "pdf",
-                                "texte": "pdf pdf pdf ",
+                                "titre": "pdf n",
+                                "texte": "pdf pdf pdf n",
                                 "image": {
+                                    "type": "string",
+                                    "format": "binary"
+                                },
+                                "document": {
                                     "type": "string",
                                     "format": "binary"
                                 }
@@ -1523,6 +1550,56 @@
                 ]
             }
         },
+        "/api/Details_DM/{dossierMedical}": {
+            "get": {
+                "summary": "Détail d'un dossier médical pour PS",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Gestion des dossiers médical pour personnel de santé"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "dossierMedical",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "User-Agent",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
         "/api/listes_generale_DM": {
             "get": {
                 "summary": "Liste générale des dossiers médicaux pour l'admin",
@@ -1686,60 +1763,6 @@
                 ]
             }
         },
-        "/api/recherche": {
-            "post": {
-                "summary": "Rechercher un utilisateur via téléphone",
-                "description": "",
-                "responses": {
-                    "201": {
-                        "description": "Created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": ""
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": ""
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": ""
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Unauthorize",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": ""
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "Gestion des dossiers médical pour personnel de santé"
-                ],
-                "parameters": [
-                    {
-                        "in": "header",
-                        "name": "User-Agent",
-                        "type": "string"
-                    }
-                ]
-            }
-        },
         "/api/update_DM/{dossier_Medical}": {
             "put": {
                 "summary": "Update d'une dossier médical",
@@ -1787,12 +1810,81 @@
                         "name": "User-Agent",
                         "type": "string"
                     }
-                ]
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "statut": {
+                                        "type": "string"
+                                    },
+                                    "numero_Identification": {
+                                        "type": "string"
+                                    },
+                                    "age": {
+                                        "type": "string"
+                                    },
+                                    "poste_avortement": {
+                                        "type": "string"
+                                    },
+                                    "poste_partum": {
+                                        "type": "string"
+                                    },
+                                    "methode_en_cours": {
+                                        "type": "string"
+                                    },
+                                    "methode": {
+                                        "type": "string"
+                                    },
+                                    "methode_choisie": {
+                                        "type": "string"
+                                    },
+                                    "preciser_autres_methodes": {
+                                        "type": "string"
+                                    },
+                                    "raison_de_la_visite": {
+                                        "type": "string"
+                                    },
+                                    "indication": {
+                                        "type": "string"
+                                    },
+                                    "effets_indesirables_complications": {
+                                        "type": "string"
+                                    },
+                                    "date_visite": {
+                                        "type": "string"
+                                    },
+                                    "date_prochain_rv": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "statut": "Ancien",
+                                "numero_Identification": "875",
+                                "age": "69",
+                                "poste_avortement": "0",
+                                "poste_partum": "0",
+                                "methode_en_cours": "implant",
+                                "methode": "implant",
+                                "methode_choisie": "implant",
+                                "preciser_autres_methodes": "implant",
+                                "raison_de_la_visite": "bien",
+                                "indication": "bien",
+                                "effets_indesirables_complications": "not",
+                                "date_visite": "2024-05-25",
+                                "date_prochain_rv": "2024-08-14"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/Detail_DM/{dossierMedical}": {
             "get": {
-                "summary": "Détail d'un dossier médical",
+                "summary": "Détail d'un dossier médical pour l'admin",
                 "description": "",
                 "responses": {
                     "200": {
@@ -1842,7 +1934,7 @@
         },
         "/api/listes_totale_DM": {
             "get": {
-                "summary": "Liste des dossiers médicaux",
+                "summary": "Liste des dossiers médicaux créés par un PS",
                 "description": "",
                 "responses": {
                     "200": {
@@ -1989,15 +2081,18 @@
                                     },
                                     "date_prochain_rv": {
                                         "type": "string"
+                                    },
+                                    "id": {
+                                        "type": "string"
                                     }
                                 }
                             },
                             "example": {
-                                "statut": "Nouveau Patiente",
-                                "numero_Identification": "458",
-                                "age": "45",
-                                "poste_avortement": "0",
-                                "poste_partum": "0",
+                                "statut": "Nouveau patient Leye",
+                                "numero_Identification": "777",
+                                "age": "25",
+                                "poste_avortement": "1",
+                                "poste_partum": "1",
                                 "methode_en_cours": "dui",
                                 "methode": "implant",
                                 "methode_choisie": "injection",
@@ -2005,9 +2100,80 @@
                                 "raison_de_la_visite": "Utiliser une nou méthode",
                                 "indication": "Nice",
                                 "effets_indesirables_complications": "pas effet",
-                                "date_visite": "2024-01-15",
-                                "date_prochain_rv": "2024-11-29"
+                                "date_visite": "2024-05-12",
+                                "date_prochain_rv": "2024-10-25",
+                                "id": "11"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/{id}": {
+            "post": {
+                "summary": "Envoyer un message via WhatSapp",
+                "description": "",
+                "responses": {
+                    "201": {
+                        "description": "Created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorize",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": ""
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Gestion des messages"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string"
+                    },
+                    {
+                        "in": "header",
+                        "name": "User-Agent",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {}
+                            },
+                            "example": {}
                         }
                     }
                 }
@@ -2109,7 +2275,32 @@
                         "name": "User-Agent",
                         "type": "string"
                     }
-                ]
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "nom": "Bourama Ngom",
+                                "email": "bouramangom@gmail.com",
+                                "message": "SOS1 SOS1 SOS1"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/supprimer_message/{contacter}": {
@@ -2277,52 +2468,24 @@
                         "name": "User-Agent",
                         "type": "string"
                     }
-                ]
-            }
-        },
-        "/api/liste_commentaire": {
-            "get": {
-                "summary": "Liste des commentaires de tous les forums",
-                "description": "",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": ""
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": ""
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {},
-                                "example": ""
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "Gestion des commentaires"
                 ],
-                "parameters": [
-                    {
-                        "in": "header",
-                        "name": "User-Agent",
-                        "type": "string"
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "texte": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "texte": "Supprimer commentaire pour le forum 5"
+                            }
+                        }
                     }
-                ]
+                }
             }
         },
         "/api/supprimer_commentaire/{id}": {
@@ -2431,7 +2594,24 @@
                         "name": "User-Agent",
                         "type": "string"
                     }
-                ]
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "texte": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "texte": "Modification Premier commentaire pour le forum 5"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/create_forum": {
@@ -2505,8 +2685,8 @@
                                 }
                             },
                             "example": {
-                                "titre": "",
-                                "texte": "",
+                                "titre": "forum 2",
+                                "texte": "texte forum 2",
                                 "image": {
                                     "type": "string",
                                     "format": "binary"
@@ -2679,8 +2859,8 @@
                                 }
                             },
                             "example": {
-                                "titre": "",
-                                "texte": "",
+                                "titre": "forrun 3",
+                                "texte": "texte forum 3",
                                 "image": {
                                     "type": "string",
                                     "format": "binary"

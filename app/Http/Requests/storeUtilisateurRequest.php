@@ -22,7 +22,7 @@ class storeUtilisateurRequest extends FormRequest
     public function rules(): array
     {
         return [
-                'nom' => ['required', 'string', 'min:2', 'max:50'],
+                'nom' => ['required', 'string', 'regex:/^[a-zA-Z\s]*$/', 'min:2', 'max:50'],                
                 'email' => ['required', 'email', 'unique:users,email'],
                 'password' => ['required', 'string','unique:users,password','min:8', 'max:30'],
                 'telephone' => ['required', 'unique:users,telephone','regex:/^(70|75|76|77|78)[0-9]{7}$/'],
@@ -34,9 +34,10 @@ class storeUtilisateurRequest extends FormRequest
     {
         return [
             "nom.required" => 'Le nom est requis',
-            "nom.string" => 'Le nom doit être composé de lettres, de chiffres et d\'espaces (au moins 2 caractères)',
-            "nom.min" => 'Le nom doit être composé de lettres, de chiffres et d\'espaces (au moins 2 caractères)',
-            "nom.max" => 'Le nom doit être composé de lettres, de chiffres et d\'espaces (au plus 50 caractères)',
+            "nom.string" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+            "nom.regex" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+            "nom.min" => 'Le nom doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+            "nom.max" => 'Le nom doit être composé de lettres et d\'espaces (au plus 50 caractères)',
             "email.required" => 'L\'email est requise',
             "email.email" => 'Format email incorrect',
             "email.unique" => 'l\'email existe déjà',

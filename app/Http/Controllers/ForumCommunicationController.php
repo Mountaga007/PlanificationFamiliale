@@ -151,7 +151,6 @@ class ForumCommunicationController extends Controller
             return response()->json([
                 'code_valide' => 200,
                 'message' => 'Le forum de communication a été mis à jour avec succès.',
-                'forum' => $forum,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

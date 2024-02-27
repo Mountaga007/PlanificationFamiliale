@@ -63,10 +63,6 @@ class User extends Authenticatable implements JWTSubject
          return $this->hasOne(PersonnelSante::class);
      }
 
-     public function dossierMedical()
-    {
-        return $this->hasOne(Dossier_Medical::class);
-    }
 
     //ligne ajouter
     /**

@@ -86,13 +86,14 @@ class CommentaireController extends Controller
             // Récupérer les commentaires avec les noms des utilisateurs
             $commentaires = Commentaire::where('forum_communication_id', $forum->id)
                 ->with(['user:id,nom']) // Sélectionner uniquement l'ID et le nom de l'utilisateur
-                ->get(['texte', 'user_id']);
+                ->get(['id','texte', 'user_id']);
     
             // Formater les données pour la réponse
             $formattedCommentaires = $commentaires->map(function ($commentaire) {
                 return [
+                    'id' => $commentaire->id,
                     'texte' => $commentaire->texte,
-                    'nom_auteur' => $commentaire->user->nom,
+                    'nom' => $commentaire->user->nom,
                 ];
             });
     
@@ -149,8 +150,7 @@ class CommentaireController extends Controller
         return response()->json([
             'code_valide' => 200,
             'message' => 'Commentaire mis à jour avec succès.',
-            'commentaire' => $commentaire,
-        ]);
+        ], 200);
     } catch (\Exception $e) {
         return response()->json([
             'code_valide' => 500,

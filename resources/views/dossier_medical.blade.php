@@ -33,20 +33,15 @@
 
     <div class="user-info">
         <h2>Informations de l'utilisateur</h2>
-        @if(isset($dossierMedical['user']))
-            <p>Nom de l'utilisateur : {{ $dossierMedical['user']['nom'] }}</p>
-            <p>Email de l'utilisateur : {{ $dossierMedical['user']['email'] }}</p>
-            <p>Téléphone de l'utilisateur : {{ $dossierMedical['user']['telephone'] }}</p>
-            <p>Image de l'utilisateur : {{ $dossierMedical['user']['image'] }}</p>
-            <p>Rôle de l'utilisateur : {{ $dossierMedical['user']['role'] }}</p>
-        @else
-            <p>Informations de l'utilisateur non disponibles.</p>
-        @endif
+            <p>Prenom de l'utilisateur : {{ $dossierMedical['prenom'] }}</p>
+            <p>Nom de l'utilisateur : {{ $dossierMedical['nom'] }}</p>
+            <p>Telephone de l'utilisateur : {{ $dossierMedical['telephone'] }}</p>
+            <p>Adresse de l'utilisateur : {{ $dossierMedical['adresse'] }}</p>
+            <p>Email de l'utilisateur : {{ $dossierMedical['email'] }}</p>
     </div>
 
     <div class="medical-info">
         <h2>Informations Médicales</h2>
-        <p>Identifiant de l'utilisateur : {{ $dossierMedical['id'] }}</p>
         <p>Statut : {{ $dossierMedical['statut'] }}</p>
         <p>Numéro d'identification du dossier médical : {{ $dossierMedical['numero_Identification'] }}</p>
         <p>Âge de l'utilisateur : {{ $dossierMedical['age'] }}</p>

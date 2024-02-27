@@ -71,8 +71,12 @@
                             <img src="https://ibb.co/LdtsV8d" alt="Logo Planification Familiale, DEBBO" class="logo">
                         </div>
                             <div>
-                                <p class="fs-5 mt-4">Bonjour {{ $nom }} ,</p>
-                                <p class="fs-5 mt-4">Votre prochaine rendez-vous est le : {{ $date_prochain_rv }}</p>
+                                <p class="fs-5 mt-4">Bonjour {{ $prenom }} {{ $nom }} ,</p>
+                                <p class="fs-5 mt-4">Votre prochaine rendez-vous est le :
+                                    <strong> 
+                                        {{ $date_prochain_rv }}
+                                    </strong>
+                                </p>
                             </div>
                         <div class="text-center">
                             <p class="fs-5 mt-4">Cordialement {{ $nom_personnel }}</p>

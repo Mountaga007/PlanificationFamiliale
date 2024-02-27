@@ -30,7 +30,7 @@ class storeUpdateCommentaireRequest extends FormRequest
     {
         return [
             "texte.required" => 'Le texte est requis',
-            "texte.string" => 'Le texte doit être composé de lettres, de chiffres et d\'espaces.',
+            "texte.string" => 'Le texte doit être composé de lettres, de chiffre et d\'espaces.',
         ];
     }
 }

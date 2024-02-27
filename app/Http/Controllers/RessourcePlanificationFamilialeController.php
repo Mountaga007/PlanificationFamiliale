@@ -162,7 +162,7 @@ class RessourcePlanificationFamilialeController extends Controller
                 'message' => 'Ressource non trouvée.',
             ], 404);
         }
-        
+
         // Vérifier si l'utilisateur authentifié a le rôle 'admin' et s'il est l'auteur de la ressource
         if (auth()->user()->role == 'admin' && Auth::id() === $ressource_Planification_familiale->admin_id) {
           

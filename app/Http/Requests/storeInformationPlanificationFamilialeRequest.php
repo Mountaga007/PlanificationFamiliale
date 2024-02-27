@@ -22,7 +22,7 @@ class storeInformationPlanificationFamilialeRequest extends FormRequest
     public function rules(): array
     {
         return [
-        'titre' => ['required', 'string', 'min:2', 'max:50'],
+        'titre' => ['required', 'string', 'regex:/^[a-zA-Z\s]*$/', 'min:2', 'max:50'],
         'texte' => ['required', 'string', 'min:2', 'max:50'],
         'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
         'document' => ['nullable', 'file', 'mimes:pdf'],
@@ -33,13 +33,14 @@ class storeInformationPlanificationFamilialeRequest extends FormRequest
     {
         return [
             "titre.required" => 'Le titre est requis',
-            "titre.string" => 'Le titre doit être composé de lettres, de chiffres et d\'espaces (au moins 2 caractères)',
-            "titre.min" => 'Le titre doit être composé de lettres, de chiffres et d\'espaces (au moins 2 caractères)',           
-            "titre.max" => 'Le titre doit être composé de lettres, de chiffres et d\'espaces (au plus 50 caractères)',
+            "titre.string" => 'Le titre doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+            "titre.regex" => 'Le titre doit être composé de lettres et d\'espaces (au moins 2 caractères)',
+            "titre.min" => 'Le titre doit être composé de lettres et d\'espaces (au moins 2 caractères)',           
+            "titre.max" => 'Le titre doit être composé de lettres et d\'espaces (au plus 50 caractères)',
             "texte.required" => 'Le texte est requis',
-            "texte.string" => 'Le texte doit être composé de lettres, de chiffres et d\'espaces (au moins 2 caractères)',
-            "texte.min" => 'Le texte doit être composé de lettres, de chiffres et d\'espaces (au moins 2 caractères)',           
-            "texte.max" => 'Le texte doit être composé de lettres, de chiffres et d\'espaces (au plus 50 caractères)',
+            "texte.string" => 'Le texte doit être composé de lettres, de chiffre et d\'espaces (au moins 2 caractères)',
+            "texte.min" => 'Le texte doit être composé de lettres, de chiffre et d\'espaces (au moins 2 caractères)',           
+            "texte.max" => 'Le texte doit être composé de lettres, de chiffre et d\'espaces (au plus 50 caractères)',
             "image.image" => 'Veuillez entrer une image valide',
             "image.mimes" => 'Format de l\' image incorrect, le format de l\' image doit etre de format : jpeg,png,jpg,gif',
             "document.file" => 'Veuillez entrer un document valide format : pdf',

@@ -42,15 +42,14 @@ class ContacterController extends Controller
             if (!is_numeric($id)) {
                 throw new Exception('L\'ID doit être numérique.');
             }
-
+            
             $utilisateur = User::findOrFail($id);
-
             $numeroOriginal = $utilisateur->telephone;
-
+            
             if (empty($numeroOriginal)) {
                 throw new Exception("Numéro de téléphone non valide. Numéro original : $numeroOriginal, Numéro nettoyé : $numeroOriginal");
             }
-
+            
             $urlWhatsApp = "https://api.whatsapp.com/send?phone=$numeroOriginal";
 
             return redirect()->to($urlWhatsApp);

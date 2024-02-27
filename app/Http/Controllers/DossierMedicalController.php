@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Http\Request;
@@ -21,54 +20,56 @@ class DossierMedicalController extends Controller
     // Liste des dossiers médicaux créés par un personnel de santé
     public function index()
 {
-    try {
-        $user = Auth::user();
+  try {
+    $user = Auth::user();
 
-        // Assurez-vous que l'utilisateur est lié à un personnel de santé
-        if ($user->personnelSante) {
-            
-            // Récupérer la liste des dossiers médicaux créés par le personnel de santé
-            $listeDossiersMedicaux = $user->personnelSante
-                ->dossiersMedicaux()
-                ->where('archive', false)
-                ->get();
+    // Assurez-vous que l'utilisateur est lié à un personnel de santé
+    if ($user->personnelSante) {
+       
+      // Récupérer la liste des dossiers médicaux créés par le personnel de santé
+      $listeDossiersMedicaux = $user->personnelSante
+        ->dossiersMedicaux()
+        ->where('archive', false)
+        ->get();
 
-            // Vérifier s'il n'y a aucun dossier médical enregistré
-            if ($listeDossiersMedicaux->isEmpty()) {
-                return response()->json([
-                    'code_valide' => 200,
-                    'message' => 'Vous n\'avez enregistré aucun dossier médical.',
-                ]);
-            }
-
-            // Récupérer les détails de l'utilisateur avec la liste des dossiers médicaux associés
-            $information=[];
-            foreach ($listeDossiersMedicaux as $listeDossiersMedical) {
-                $utilisateur = User::find($listeDossiersMedical->user_id);
-                $information[] = [
-                    'information_de_utilisateur' => $utilisateur,
-                    'information_du_dossier_medical' => $listeDossiersMedical,
-                ];
-            }
-
-            return response()->json([
-                'code_valide' => 200,
-                'message' => 'La liste des détails de tous les dossiers a été bien récupérée.',
-                'Liste des dossiers medicaux' => $information,
-            ]);
-        } else {
-            return response()->json([
-                'code_valide' => 401,
-                'message' => 'Vous n\'avez pas les autorisations pour accéder à cet dossier.',
-            ], 401);
-        }
-    } catch (\Exception $e) {
+      // Vérifier s'il n'y a aucun dossier médical enregistré
+      if ($listeDossiersMedicaux->isEmpty()) {
         return response()->json([
-            'code_valide' => 500,
-            'message' => 'Une erreur s\'est produite lors de la récupération des dossiers médicaux.',
-            'error' => $e->getMessage(),
-        ], 500);
+          'code_valide' => 200,
+          'message' => 'Vous n\'avez enregistré aucun dossier médical.',
+        ]);
+      }
+
+      // Récupérer la liste des dossiers médicaux avec les détails du personnel de santé
+      $dossiersWithPersonnelDetails = $listeDossiersMedicaux->map(function ($dossierMedical) use ($user) {
+        return [
+          'dossier_medical' => $dossierMedical,
+          'personnel_sante' => [
+            'nom' => $user->nom,
+            'telephone' => $user->telephone,
+            'email' => $user->email,
+          ],
+        ];
+      });
+      return response()->json([
+        'code_valide' => 200,
+        'message' => 'La liste des détails de tous les dossiers a été bien récupérée.',
+        'Liste des dossiers avec les détails du personnel de santé' => $dossiersWithPersonnelDetails
+      ]);
+       
+    } else {
+      return response()->json([
+        'code_valide' => 401,
+        'message' => 'Vous n\'avez pas les autorisations pour accéder à cet dossier.',
+      ], 401);
     }
+  } catch (\Exception $e) {
+    return response()->json([
+      'code_valide' => 500,
+      'message' => 'Une erreur s\'est produite lors de la récupération des dossiers médicaux.',
+      'error' => $e->getMessage(),
+    ], 500);
+  }
 }
 
     
@@ -79,19 +80,10 @@ class DossierMedicalController extends Controller
     try {
         // Récupérer la liste des dossiers médicaux avec les détails de l'utilisateur
         $listeDossiersMedicaux = Dossier_Medical::all();
-        $information=[];
-        foreach ($listeDossiersMedicaux as $listeDossiersMedical) {
-            $utilisateur=User::where('id', $listeDossiersMedical->user_id)->first();
-            $information[]=[
-                'information_de_utilisateur'=> $utilisateur,
-                'information_du_dossier_medical'=> $listeDossiersMedical,
-            ];
-            
-        }
         return response()->json([
             'code_valide' => 200,
             'message' => 'La liste des détails de tous les dossiers a été bien récupérée.',
-            'Liste des dossiers medicaux' => $information,
+            'Liste des dossiers medicaux' => $listeDossiersMedicaux,
         ]);
     } catch (\Exception $e) {
         return response()->json([
@@ -102,90 +94,87 @@ class DossierMedicalController extends Controller
     }
 }
 
-    // Liste des utilisateurs avec un dossier médical pour l'administrateur
-public function liste_utilisateur_dossier_medical()
-{
-    try {
-        // Récupérer la liste des utilisateurs avec leurs informations pertinentes
-        $listeUtilisateurs = User::whereHas('dossierMedical') // Vérifier si l'utilisateur a un dossier médical associé
-            ->where('role', 'utilisateur')
-            ->select('id', 'nom', 'email', 'telephone', 'role')
-            ->get();
+//     // Liste des utilisateurs avec un dossier médical pour l'administrateur
+// public function liste_utilisateur_dossier_medical()
+// {
+//     try {
+//         // Récupérer la liste des utilisateurs avec leurs informations pertinentes
+//         $listeUtilisateurs = User::whereHas('dossierMedical') // Vérifier si l'utilisateur a un dossier médical associé
+//             ->where('role', 'utilisateur')
+//             ->select('id', 'nom', 'email', 'telephone', 'role')
+//             ->get();
 
-        if ($listeUtilisateurs->isEmpty()) {
-            // Si la liste est vide, renvoyer un message approprié
-            return response()->json([
-                'code_valide' => 200,
-                'message' => "Il n'y a pas d'utilisateur avec un dossier médical pour le moment. Liste des utilisateurs est vide.",
-                'liste_utilisateurs' => [],
-            ]);
-        }
+//         if ($listeUtilisateurs->isEmpty()) {
+//             // Si la liste est vide, renvoyer un message approprié
+//             return response()->json([
+//                 'code_valide' => 200,
+//                 'message' => "Il n'y a pas d'utilisateur avec un dossier médical pour le moment. Liste des utilisateurs est vide.",
+//                 'liste_utilisateurs' => [],
+//             ]);
+//         }
 
-        return response()->json([
-            'code_valide' => 200,
-            'message' => 'La liste des utilisateurs avec un dossier médical a été bien récupérée.',
-            'liste_utilisateurs' => $listeUtilisateurs,
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'code_valide' => 500,
-            'message' => 'Une erreur s\'est produite lors de la récupération de la liste des utilisateurs.',
-            'error' => $e->getMessage(),
-        ], 500);
-    }
-}
-
-
+//         return response()->json([
+//             'code_valide' => 200,
+//             'message' => 'La liste des utilisateurs avec un dossier médical a été bien récupérée.',
+//             'liste_utilisateurs' => $listeUtilisateurs,
+//         ]);
+//     } catch (\Exception $e) {
+//         return response()->json([
+//             'code_valide' => 500,
+//             'message' => 'Une erreur s\'est produite lors de la récupération de la liste des utilisateurs.',
+//             'error' => $e->getMessage(),
+//         ], 500);
+//     }
+// }
 
 
-
-public function recherche(Request $request)
-{
-    try {
+// public function recherche(Request $request)
+// {
+//     try {
         
-        $user = User::where('telephone', $request->telephone)->first();
+//         $user = User::where('telephone', $request->telephone)->first();
 
-        if ($user) {
+//         if ($user) {
 
-            // Vérifier si l'utilisateur a déjà un dossier médical
-            $dossier_Medical = Dossier_Medical::all();
-            foreach ($dossier_Medical as $dossier) {
-                if ($user->id === $dossier->user_id) {
-                    return response()->json([
-                        'code_valide' => 409,
-                        'message' => 'L\'utilisateur a déjà un dossier médical.',
-                        'dossier_medical_id' => $user->dossierMedical->id,
-                    ], 409);
-                }
-            }
-                // Rediriger vers le formulaire Dossier_Medical
-                //return redirect()->to(urldossier_medical);
-                return response()->json([
-                    'code_valide' => 200,
-                    'message' => 'Utilisateur trouvé. Veuillez compléter le formulaire pour créer un dossier médical.',
-                    'user' => $user,
-                ], 200);
+//             // Vérifier si l'utilisateur a déjà un dossier médical
+//             $dossier_Medical = Dossier_Medical::all();
+//             foreach ($dossier_Medical as $dossier) {
+//                 if ($user->id === $dossier->user_id) {
+//                     return response()->json([
+//                         'code_valide' => 409,
+//                         'message' => 'L\'utilisateur a déjà un dossier médical.',
+//                         'dossier_medical_id' => $user->dossierMedical->id,
+//                     ], 409);
+//                 }
+//             }
+//                 // Rediriger vers le formulaire Dossier_Medical
+//                 //return redirect()->to(urldossier_medical);
+//                 return response()->json([
+//                     'code_valide' => 200,
+//                     'message' => 'Utilisateur trouvé. Veuillez compléter le formulaire pour créer un dossier médical.',
+//                     'user' => $user,
+//                 ], 200);
             
-             } else {
-             // Rediriger vers le formulaire d'inscription
-             //return redirect()->to(urlinscription);
-            return response()->json([
+//              } else {
+//              // Rediriger vers le formulaire d'inscription
+//              //return redirect()->to(urlinscription);
+//             return response()->json([
                 
-                'code_valide' => 404,
-                'message' => 'Aucun utilisateur trouvé avec le numéro de téléphone fourni. Veuillez vous inscrire.',
-            ], 404);
-        }
-    } 
+//                 'code_valide' => 404,
+//                 'message' => 'Aucun utilisateur trouvé avec le numéro de téléphone fourni. Veuillez vous inscrire.',
+//             ], 404);
+//         }
+//     } 
     
-    catch (\Exception $e) {
-        // Une erreur s'est produite
-        return response()->json([
-            'code_valide' => 500,
-            'message' => 'Erreur lors de la recherche d\'utilisateur.',
-            'error' => $e->getMessage(),
-        ], 500);
-    }
-}
+//     catch (\Exception $e) {
+//         // Une erreur s'est produite
+//         return response()->json([
+//             'code_valide' => 500,
+//             'message' => 'Erreur lors de la recherche d\'utilisateur.',
+//             'error' => $e->getMessage(),
+//         ], 500);
+//     }
+// }
 
     /**
      * Show the form for creating a new resource.
@@ -200,20 +189,11 @@ public function recherche(Request $request)
      */
   
 
-     public function store(storeDossierMedicalRequest $request)
+     public function store(Request $request)
      {
          try {
              // Récupérer l'utilisateur actuel
              $user = auth()->user();
-     
-             // Vérifier si l'utilisateur a déjà un dossier médical
-             $existingDossier = Dossier_Medical::where('user_id', $request->id)->first();
-             if ($existingDossier) {
-                 return response()->json([
-                     'code_valide' => 400,
-                     'message' => 'L\'utilisateur a déjà un dossier médical.',
-                 ], 400);
-             }
      
              // Vérifier si l'utilisateur a au moins 18 ans
              if ($request->age < 18) {
@@ -225,7 +205,11 @@ public function recherche(Request $request)
      
              // Créer le dossier médical lié à l'utilisateur et au personnel de santé
              $dossier_Medical = new Dossier_Medical();
-             $dossier_Medical->user_id = $request->id;
+             $dossier_Medical->prenom = $request->prenom;
+             $dossier_Medical->nom = $request->nom;
+             $dossier_Medical->telephone = $request->telephone;
+             $dossier_Medical->adresse = $request->adresse;
+             $dossier_Medical->email = $request->email;
              $dossier_Medical->statut = $request->statut;
              $dossier_Medical->numero_Identification = $request->numero_Identification;
              $dossier_Medical->age = $request->age;
@@ -258,16 +242,16 @@ public function recherche(Request $request)
              }
              // Enregistrez le dossier médical
              $dossier_Medical->save();
-             $patient = $dossier_Medical->user;
              // Envoyer un courriel à l'utilisateur pour la prochaine rendez-vous.
              Mail::send('emailrendezvous', [
-                 'nom' => $dossier_Medical->user->nom,
+                 'prenom' => $dossier_Medical->prenom,
+                 'nom' => $dossier_Medical->nom,
                  'date_prochain_rv' => $dossier_Medical->date_prochain_rv,
                  'nom_personnel' => $user->nom,
              ],
-                 function ($message) use ($patient) {
-                     $message->to($patient->email);
-                     $message->subject('Notification de rendez-vous');
+                 function ($message) use ($request) {
+                     $message->to($request->email);
+                     $message->subject('Notification de prise de rendez-vous');
                  });
      
              return response()->json([
@@ -284,50 +268,49 @@ public function recherche(Request $request)
      }
      
 
-     
-    
-
-    
-
     /**
      * Display the specified dossier medical.
      */
     public function show(Dossier_Medical $dossierMedical)
 {
-    try {
-       
-        // Récuperer l'utilisateur associé au dossier médical 
-        $user = User::where('id',$dossierMedical->user_id)->first();
+  try {
+    $dossierMedical = Dossier_Medical::findOrFail($dossierMedical->id);
     
-        if ($user) {
-            // Retourner les détails du dossier médical en tant que réponse JSON
-            return response()->json([
-                'code_valide' => 200,
-                'message' => 'Les détails du dossier médical récupérés avec succès.',
-                'liste_des_details_utilisateur' => $user,
-                'liste_des_details_dossier_medical' => $dossierMedical,
-            ]);
-        } else {
-            // Gérer le cas où l'utilisateur associé n'est pas trouvé
-            return response()->json([
-                'code_valide' => 404,
-                'message' => 'Utilisateur associé au dossier médical non trouvé.',
-            ], 404);
-        }
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        // Gérer l'erreur si la dossier médical n'est pas trouvée
+    if ($dossierMedical->archived) {
+      // Vérifier si l'utilisateur est un administrateur
+      if (auth()->user()->role === 'admin') {
         return response()->json([
-            'code_valide' => 404,
-            'message' => 'Dossier médical non trouvée.',
-        ], 404);
-    } catch (\Exception $e) {
-        // Gérer les autres erreurs avec un message approprié
-        return response()->json([
-            'code_valide' => 500,
-            'message' => 'Une erreur s\'est produite lors de la récupération des détails du dossier médical.',
-            'error' => $e->getMessage(),
+          'code_valide' => 200,
+          'message' => 'Les détails du dossier médical ont été récupérés avec succès (accès administrateur).',
+          'liste_des_details_dossier_medical' => $dossierMedical,
         ]);
+      } else {
+        return response()->json([
+          'code_valide' => 403,
+          'message' => 'Accès refusé. Ce dossier médical est archivé et ne peut pas être consulté.',
+        ], 403);
+      }
+    } else {
+      return response()->json([
+        'code_valide' => 200,
+        'message' => 'Les détails du dossier médical ont été récupérés avec succès.',
+        'liste_des_details_dossier_medical' => $dossierMedical,
+      ]);
     }
+  } 
+  catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+    return response()->json([
+      'code_valide' => 404,
+      'message' => 'Dossier médical non trouvé.',
+    ], 404);
+  } 
+  catch (\Exception $e) {
+    return response()->json([
+      'code_valide' => 500,
+      'message' => 'Une erreur s\'est produite lors de la récupération des détails du dossier médical.',
+      'error' => $e->getMessage(),
+    ]);
+  }
 }
 
     
@@ -346,7 +329,7 @@ public function recherche(Request $request)
     /**
  * Update the specified resource in storage.
  */
-public function update(storeUpdateDossierMedicalRequest $request, Dossier_Medical $dossier_Medical)
+public function update(Request $request, Dossier_Medical $dossier_Medical)
 {
     try {
         // Assurez-vous que le dossier médical existe
@@ -368,6 +351,11 @@ public function update(storeUpdateDossierMedicalRequest $request, Dossier_Medica
 
         // Mettez à jour les propriétés du dossier médical avec les nouvelles valeurs
         $dossier_Medical->update([
+            'prenom' => $request->prenom,
+            'nom' => $request->nom,
+            'telephone' => $request->telephone,
+            'adresse' => $request->adresse,
+            'email' => $request->email,
             'statut' => $request->statut,
             'numero_Identification' => $request->numero_Identification,
             'age' => $request->age,
@@ -543,12 +531,5 @@ public function telechargerDossier($id)
         ], 500);
     }
 }
-
-
-
-
-
-
-
 
 }

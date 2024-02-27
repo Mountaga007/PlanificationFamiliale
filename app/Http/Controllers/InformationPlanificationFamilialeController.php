@@ -142,67 +142,65 @@ class InformationPlanificationFamilialeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(storeUpdateInformationPFRequest $request, $id)
-    {
-        try {
+    public function update(Request $request, $id)
+{
+  try {
+    $information_Planification_Familiale = Information_Planification_Familiale::find($id);
 
-            $information_Planification_Familiale = Information_Planification_Familiale::find($id);
-
-            // Vérifier si l'information existe
-            if (!$information_Planification_Familiale) {
-                return response()->json([
-                    'code_valide' => 404,
-                    'message' => 'Information non trouvée.',
-                ], 404);
-            }
-           
-            // Vérifier si l'utilisateur authentifié a le rôle 'admin' et s'il est l'auteur de l'information'
-            if (auth()->user()->role == 'admin' && Auth::id() === $information_Planification_Familiale->admin_id) {
-                
-
-                // Mettre à jour les attributs de l'information
-                $information_Planification_Familiale->titre = $request->titre;
-                $information_Planification_Familiale->texte = $request->texte;
-                
-                // Mettre à jour l'image si elle est fournie
-                if ($request->file('image')) {
-                    $imageFile = $request->file('image');
-                    $filename = date('YmdHi') . $imageFile->getClientOriginalName();
-                    $imageFile->move(public_path('images'), $filename);
-                    $information_Planification_Familiale[0]->image = $filename;
-                }
-                
-                // Mettre à jour le document si il est fourni
-                if ($request->file('document')) {
-                    $pdfFile = $request->file('document');
-                    $pdfFilename = date('YmdHi') . $pdfFile->getClientOriginalName();
-                    $pdfFile->move(public_path('pdf_files'), $pdfFilename);
-                    $information_Planification_Familiale[0]->document = $pdfFilename;
-                }
-
-                // Sauvegarder les modifications
-                $information_Planification_Familiale->save();
-
-                return response()->json([
-                    'code_valide' => 200,
-                    'message' => 'L\'information de planification familiale a été mise à jour avec succès.',
-                ]);
-            } else {
-                // Retourner un message d'erreur si l'utilisateur n'a pas le rôle 'admin' ou n'est pas l'auteur de l'information
-                return response()->json([
-                    'code_valide' => 403,
-                    'message' => 'Vous n\'avez pas les autorisations nécessaires pour mettre à jour cette information.',
-                ], 403);
-            }
-        } catch (\Exception $e) {
-           // Gérer les erreurs avec un message approprié
-            return response()->json([
-                'code_valide' => 500,
-                'message' => 'Erreur lors de la mise à jour de l\'information de planification familiale.',
-                'error' => $e->getMessage(),
-            ]);
-       }
+    // Vérifier si l'information existe
+    if (!$information_Planification_Familiale) {
+      return response()->json([
+        'code_valide' => 404,
+        'message' => 'Information non trouvée.',
+      ], 404);
     }
+
+    // Vérifier si l'utilisateur authentifié a le rôle 'admin' et s'il est l'auteur de l'information
+    if (auth()->user()->role === 'admin' && auth()->id() === $information_Planification_Familiale->admin_id) {
+
+      // Mettre à jour les attributs de l'information
+      $information_Planification_Familiale->titre = $request->input('titre');
+      $information_Planification_Familiale->texte = $request->input('texte');
+
+      // Mettre à jour l'image si elle est fournie
+      if ($request->file('image')) {
+        $imageFile = $request->file('image');
+        $filename = date('YmdHi') . $imageFile->getClientOriginalName();
+        $imageFile->move(public_path('images'), $filename);
+        $information_Planification_Familiale->image = $filename;
+      }
+
+      // Mettre à jour le document si il est fourni
+      if ($request->file('document')) {
+        $pdfFile = $request->file('document');
+        $pdfFilename = date('YmdHi') . $pdfFile->getClientOriginalName();
+        $pdfFile->move(public_path('pdf_files'), $pdfFilename);
+        $information_Planification_Familiale->document = $pdfFilename;
+      }
+
+      // Sauvegarder les modifications
+      $information_Planification_Familiale->save();
+
+      return response()->json([
+        'code_valide' => 200,
+        'message' => 'L\'information de planification familiale a été mise à jour avec succès.',
+      ]);
+    } else {
+      // Retourner un message d'erreur si l'utilisateur n'a pas le rôle 'admin' ou n'est pas l'auteur de l'information
+      return response()->json([
+        'code_valide' => 403,
+        'message' => 'Vous n\'avez pas les autorisations nécessaires pour mettre à jour cette information.',
+      ], 403);
+    }
+  } catch (\Exception $e) {
+    // Gérer les erreurs avec un message approprié
+    return response()->json([
+      'code_valide' => 500,
+      'message' => 'Erreur lors de la mise à jour de l\'information de planification familiale.',
+      'error' => $e->getMessage(),
+    ]);
+  }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -254,6 +252,14 @@ class InformationPlanificationFamilialeController extends Controller
                         ], 403);
                     }
          } 
+         catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Gérer l'erreur si la ressource n'est pas trouvée
+            return response()->json([
+                'code_valide' => 404,
+                'message' => 'Ressource non trouvée.',
+            ], 404);
+    
+        }
             catch (\Exception $e) {
                  // Gérer les autres erreurs avec un message approprié
             return response()->json([

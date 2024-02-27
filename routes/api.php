@@ -52,8 +52,8 @@ Route::get('detail_information/{id}', [InformationPlanificationFamilialeControll
 
 Route::middleware(['auth:api', 'role:personnelsante'])->group(function () {
     Route::post('enregistrer_Dossier_Medical', [DossierMedicalController::class, 'store']);
-    Route::post('/update_DM/{dossier_Medical}', [DossierMedicalController::class, 'update']);
-    Route::post('recherche_DM', [DossierMedicalController::class, 'recherche']);
+    Route::put('/update_DM/{dossier_Medical}', [DossierMedicalController::class, 'update']);
+    //Route::post('recherche_DM', [DossierMedicalController::class, 'recherche']);
     Route::delete('archiver_DM/{dossier_Medical}', [DossierMedicalController::class, 'destroy']);
 
     Route::get('listes_ressource', [RessourcePlanificationFamilialeController::class, 'index']);
@@ -78,7 +78,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::delete('supprimer_commentaire/{id}', [CommentaireController::class, 'destroy']);
 
     Route::post('creer_commentaire_forum/{forumId}', [CommentaireController::class, 'participerForum']);
-    Route::post('update_commentaire/{commentaire}', [CommentaireController::class, 'update']);
+    Route::put('update_commentaire/{commentaire}', [CommentaireController::class, 'update']);
     Route::post('calculer_periode_ovulation', [CalculPeriodeOvulationController::class, 'calculateOvulation']);
 });
 
@@ -86,13 +86,13 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::get('liste_personnelsante', [PersonnelSanteController::class, 'index']);
     Route::get('liste_personnelsante_valide', [PersonnelSanteController::class, 'listevalide']);
     Route::get('liste_utilisateur', [UtilisateurController::class, 'index']);
-    Route::get('liste_utilisateur_DM', [DossierMedicalController::class, 'liste_utilisateur_dossier_medical']);
+    //Route::get('liste_utilisateur_DM', [DossierMedicalController::class, 'liste_utilisateur_dossier_medical']);
     Route::put('valider/{id}', [AdminController::class, 'validerInscription']);
     Route::put('invalider/{id}', [AdminController::class, 'invaliderInscription']);
     Route::post('create_ressource', [RessourcePlanificationFamilialeController::class, 'store']);
     Route::post('create_information', [InformationPlanificationFamilialeController::class, 'store']);
-    Route::post('update_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'update']);
-    Route::post('update_information/{id}', [InformationPlanificationFamilialeController::class, 'update']);
+    Route::put('update_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'update']);
+    Route::put('update_information/{id}', [InformationPlanificationFamilialeController::class, 'update']);
     Route::delete('supprimer_information/{id}', [InformationPlanificationFamilialeController::class, 'destroy']);
     Route::delete('supprimer_ressource/{id}', [RessourcePlanificationFamilialeController::class, 'destroy']);
     Route::get('liste_message', [ContacterController::class, 'index']);

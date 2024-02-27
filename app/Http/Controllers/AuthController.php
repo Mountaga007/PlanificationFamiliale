@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -24,16 +23,16 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function login(User $user)
+    public function login()
 {
     $credentials = request(['email', 'password']);
 
     if (! $token = auth()->attempt($credentials)) {
-        return response()->json(['error' => 'Mot de passe ou email incorrect, veuillez réessayer'], 401);
+        return response()->json(['error' => 'Login invalide, veuillez réessayer s\'il vous plait, mot de passe ou email incorrect.'], 401);
     }
 
     // Récupérer l'utilisateur connecté
-    $user = Auth::user();
+    $user = auth()->user();
 
     // Vérifier le statut du compte pour les utilisateurs de type 'personnelsante'
     if ($user->role === 'personnelsante' && $user->statut_compte === 0) {
@@ -42,7 +41,7 @@ class AuthController extends Controller
         return response()->json(['error' => 'Votre compte n\'a pas encore été validé. Veuillez réessayer plus tard.'], 401);
     }
 
-    return $this->respondWithToken([$token, $user]);
+    return $this->respondWithToken($token);
 }
 
 
@@ -92,7 +91,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             //Pour augmenter le temps d'expiration du token(durée de vie du token), on change(augmente) le *60
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 120
         ]);
     }
 }
