@@ -48,7 +48,6 @@
         <p>Poste avortement : {{ $dossierMedical['poste_avortement'] }}</p>
         <p>Post parfum : {{ $dossierMedical['poste_partum'] }}</p>
         <p>Méthode en cours : {{ $dossierMedical['methode_en_cours'] }}</p>
-        <p>Méthode : {{ $dossierMedical['methode'] }}</p>
         <p>Méthode choisie : {{ $dossierMedical['methode_choisie'] }}</p>
         <p>Préciser autres méthodes : {{ $dossierMedical['preciser_autres_methodes'] }}</p>
         <p>Raison de la visite : {{ $dossierMedical['raison_de_la_visite'] }}</p>

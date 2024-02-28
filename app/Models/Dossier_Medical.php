@@ -21,7 +21,6 @@ class Dossier_Medical extends Model
         'poste_avortement',
         'poste_partum',
         'methode_en_cours',
-        'methode',
         'methode_choisie',
         'preciser_autres_methodes',
         'raison_de_la_visite',

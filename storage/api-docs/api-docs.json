@@ -157,7 +157,7 @@
                 ]
             }
         },
-        "/api/valider/11": {
+        "/api/valider/{id}": {
             "put": {
                 "summary": "Valider le compte du Personnel de santé",
                 "description": "",
@@ -1887,9 +1887,6 @@
                                     "methode_en_cours": {
                                         "type": "string"
                                     },
-                                    "methode": {
-                                        "type": "string"
-                                    },
                                     "methode_choisie": {
                                         "type": "string"
                                     },
@@ -1925,7 +1922,6 @@
                                 "poste_avortement": "1",
                                 "poste_partum": "0",
                                 "methode_en_cours": "dui",
-                                "methode": "implant",
                                 "methode_choisie": "injection",
                                 "preciser_autres_methodes": "Utiliser une autre méthode",
                                 "raison_de_la_visite": "aucun",
@@ -2130,9 +2126,6 @@
                                     "methode_en_cours": {
                                         "type": "string"
                                     },
-                                    "methode": {
-                                        "type": "string"
-                                    },
                                     "methode_choisie": {
                                         "type": "string"
                                     },
@@ -2168,7 +2161,6 @@
                                 "poste_avortement": "1",
                                 "poste_partum": "0",
                                 "methode_en_cours": "dui",
-                                "methode": "implant",
                                 "methode_choisie": "injection",
                                 "preciser_autres_methodes": "Utiliser une nou méthode",
                                 "raison_de_la_visite": "aucun",

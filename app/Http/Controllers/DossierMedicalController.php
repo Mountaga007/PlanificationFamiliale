@@ -134,7 +134,6 @@ class DossierMedicalController extends Controller
              $dossier_Medical->poste_avortement = $request->poste_avortement;
              $dossier_Medical->poste_partum = $request->poste_partum;
              $dossier_Medical->methode_en_cours = $request->methode_en_cours;
-             $dossier_Medical->methode = $request->methode;
              $dossier_Medical->methode_choisie = $request->methode_choisie;
              $dossier_Medical->preciser_autres_methodes = $request->preciser_autres_methodes;
              $dossier_Medical->raison_de_la_visite = $request->raison_de_la_visite;
@@ -280,7 +279,6 @@ public function update(storeUpdateDossierMedicalRequest $request, Dossier_Medica
             'poste_avortement' => $request->poste_avortement,
             'poste_partum' => $request->poste_partum,
             'methode_en_cours' => $request->methode_en_cours,
-            'methode' => $request->methode,
             'methode_choisie' => $request->methode_choisie,
             'preciser_autres_methodes' => $request->preciser_autres_methodes,
             'raison_de_la_visite' => $request->raison_de_la_visite,
