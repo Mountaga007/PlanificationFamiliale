@@ -9,6 +9,13 @@ use App\Models\CalculPeriodeOvulation;
 
 class CalculPeriodeOvulationController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login']]);
+        
+    }
+
     /**
      * Display a listing of the resource.
      */

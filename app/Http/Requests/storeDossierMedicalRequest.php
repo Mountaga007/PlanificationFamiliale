@@ -72,7 +72,7 @@ class storeDossierMedicalRequest extends FormRequest
         "age.required" => 'L\'âge est requis.',
         "age.integer" => 'L\'âge doit être un nombre entier.',
         "poste_avortement.required" => 'Le poste d\'avortement est requis.',
-        "poste_avortement.boolean" => 'Le poste d\'avortement doit être soit true ou false.',-
+        "poste_avortement.boolean" => 'Le poste d\'avortement doit être soit true ou false.',
         "poste_partum.required" => 'Le poste partum est requis.',
         "poste_partum.boolean" => 'Le poste partum doit être soit true ou false.',
         "methode_en_cours.required" => 'La méthode en cours est requise.',

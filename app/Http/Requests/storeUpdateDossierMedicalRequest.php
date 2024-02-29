@@ -28,12 +28,12 @@ class storeUpdateDossierMedicalRequest extends FormRequest
             'nom' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
             'telephone' => ['required', 'unique:users,telephone','regex:/^(70|75|76|77|78)[0-9]{7}$/'],
             'adresse' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:users,email'],
+            'email' => ['r equired', 'email', 'unique:users,email'],
             'statut' => ['required', 'string', 'regex:/^[a-zA-Z\s]*$/'],
             'numero_Identification' => ['required', 'string'],
             'age' => ['required', 'integer'],
-            'poste_avortement' => ['required', 'in:pilule,dui,injection,implant,anneau_vaginale_a_progresterone,condom,cu'],
-            'poste_partum' => ['required', 'in:pilule,dui,injection,implant,anneau_vaginale_a_progresterone,condom,cu'],
+            'poste_avortement' => ['required', 'boolean'],
+            'poste_partum' => ['required', 'boolean'],
             'methode_en_cours' => ['required', 'in:pilule,dui,injection,implant,anneau_vaginale_a_progresterone,condom,cu'],
             'methode_choisie' => ['required', 'in:pilule,dui,injection,implant,anneau_vaginale_a_progresterone,condom,cu'],
             'preciser_autres_methodes' => ['nullable', 'string'],
@@ -72,9 +72,9 @@ class storeUpdateDossierMedicalRequest extends FormRequest
         "age.required" => 'L\'âge est requis.',
         "age.integer" => 'L\'âge doit être un nombre entier.',
         "poste_avortement.required" => 'Le poste d\'avortement est requis.',
-        "poste_avortement.in" => 'Le poste d\'avortement doit être soit pilule, dui, injection, implant, anneau_vaginale_a_progresterone, condom ou cu.',
+        "poste_avortement.boolean" => 'Le poste d\'avortement doit être soit true ou false.',
         "poste_partum.required" => 'Le poste partum est requis.',
-        "poste_partum.in" => 'Le poste partum doit être soit pilule, dui, injection, implant, anneau_vaginale_a_progresterone, condom ou cu.',
+        "poste_partum.boolean" => 'Le poste partum doit être soit true ou false.',
         "methode_en_cours.required" => 'La méthode en cours est requise.',
         "methode_en_cours.in" => 'La méthode en cours doit être soit pilule, dui, injection, implant, anneau_vaginale_a_progresterone, condom ou cu.',
         "methode_choisie.required" => 'La méthode choisie est requise.',
@@ -93,14 +93,12 @@ class storeUpdateDossierMedicalRequest extends FormRequest
 }
 
 
-public function failedValidation(Validator $validator){
-        throw new HttpResponseException(response()->json([
-            'succes' => false,
-            'status_code' => 422,
-            'error' => true,
-            'message' => 'Erreur de validation',
-            'errorsList' => $validator->errors()
-        ]));
-    }
+protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors();
 
+        throw new HttpResponseException(response()->json([
+            'errors' => $errors,
+        ], 422));
+    }
 }

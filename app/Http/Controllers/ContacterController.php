@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\storeContacterAdminRequest;
 use Exception;
 use App\Models\Contacter;
+use App\Models\Dossier_Medical;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -43,7 +44,7 @@ class ContacterController extends Controller
                 throw new Exception('L\'ID doit être numérique.');
             }
             
-            $utilisateur = User::findOrFail($id);
+            $utilisateur = Dossier_Medical::findOrFail($id);
             $numeroOriginal = $utilisateur->telephone;
             
             if (empty($numeroOriginal)) {

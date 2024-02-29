@@ -112,7 +112,6 @@ class DossierMedicalController extends Controller
          try {
              // Récupérer l'utilisateur actuel
              $user = auth()->user();
-     
              // Vérifier si l'utilisateur a au moins 18 ans
              if ($request->age < 18) {
                  return response()->json([
@@ -120,7 +119,7 @@ class DossierMedicalController extends Controller
                      'message' => 'Cet utilisateur ne peut pas avoir un dossier médical car c\'est encore un mineur. Pour avoir un dossier médical, il faut avoir au moins 18 ans.',
                  ], 400);
              }
-     
+
              // Créer le dossier médical lié à l'utilisateur et au personnel de santé
              $dossier_Medical = new Dossier_Medical();
              $dossier_Medical->prenom = $request->prenom;
@@ -131,6 +130,8 @@ class DossierMedicalController extends Controller
              $dossier_Medical->statut = $request->statut;
              $dossier_Medical->numero_Identification = $request->numero_Identification;
              $dossier_Medical->age = $request->age;
+             $dossier_Medical->prenom = $request->prenom;
+             $dossier_Medical->nom = $request->nom;
              $dossier_Medical->poste_avortement = $request->poste_avortement;
              $dossier_Medical->poste_partum = $request->poste_partum;
              $dossier_Medical->methode_en_cours = $request->methode_en_cours;
@@ -141,7 +142,7 @@ class DossierMedicalController extends Controller
              $dossier_Medical->effets_indesirables_complications = $request->effets_indesirables_complications;
              $dossier_Medical->date_visite = $request->date_visite;
              $dossier_Medical->date_prochain_rv = $request->date_prochain_rv;
-     
+
              // Vérifier si la date de prochain rendez-vous est supérieure à la date de visite
              if (strtotime($dossier_Medical->date_prochain_rv) <= strtotime($dossier_Medical->date_visite)) {
                  return response()->json([
@@ -149,7 +150,7 @@ class DossierMedicalController extends Controller
                      'message' => 'La date de prochain rendez-vous doit être supérieure à la date de visite.',
                  ], 400);
              }
-     
+
              // Assurez-vous que le personnel de santé associé existe
              if ($user->role == 'personnelsante') {
                  $dossier_Medical->personnelsante_id = $user->personnelSante->id;
@@ -170,7 +171,7 @@ class DossierMedicalController extends Controller
                      $message->to($request->email);
                      $message->subject('Notification de prise de rendez-vous');
                  });
-     
+
              return response()->json([
                  "code_valide" => 200,
                  "message" => "Dossier médical créé avec succès.",
@@ -183,6 +184,7 @@ class DossierMedicalController extends Controller
              ], 500);
          }
      }
+
      
 
     /**
