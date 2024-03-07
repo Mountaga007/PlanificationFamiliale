@@ -7,9 +7,16 @@ use App\Http\Requests\storeUpdateForumCommunicationRequest;
 use App\Models\Forum_Communication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Annotations\GestiondesforumsAnnotationController;
 
 class ForumCommunicationController extends Controller
 {
+    public function __construct(){
+        /**
+         * @GestiondesforumsAnnotationController
+         */
+    }
+
     /**
      * Display a listing of the resource.
      */

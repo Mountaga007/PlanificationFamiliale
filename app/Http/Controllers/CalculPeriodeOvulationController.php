@@ -6,6 +6,7 @@ use App\Http\Requests\storeCalculPeriodeOvulationRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\CalculPeriodeOvulation;
+use App\Http\Controllers\Annotations\GestiondesutilisateursAnnotationController;
 
 class CalculPeriodeOvulationController extends Controller
 {
@@ -13,7 +14,9 @@ class CalculPeriodeOvulationController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login']]);
-        
+        /**
+         * @GestiondesutilisateursAnnotationController
+         */
     }
 
     /**

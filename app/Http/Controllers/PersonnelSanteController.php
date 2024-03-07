@@ -6,20 +6,30 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PersonnelSante;
 use App\Http\Requests\storePersonnelSanteRequest;
+use App\Http\Controllers\Annotations\GestiondesutilisateursAnnotationController;
+
+
  
 
 class PersonnelSanteController extends Controller
 {
+    public function __construct()
+    {
+        /**
+         * @GestiondesutilisateursAnnotationController
+         */
+    }
+
     /**
      * Display a listing of the resource.
      */
 
-     //liste personnel de santé invalidé
+     //liste de tous les personnel de santé
      public function index()
 {
     try {
 
-        $personnelsDeSante = PersonnelSante::with('user:id,nom,email,telephone,role')->get();
+        $personnelsDeSante = PersonnelSante::with('user:id,nom,email,telephone,role,statut_compte')->get();
 
         return response()->json([
             'code_valide' => 200,

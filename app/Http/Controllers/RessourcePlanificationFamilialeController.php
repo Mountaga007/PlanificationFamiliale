@@ -7,9 +7,18 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\storeRessourceRequest;
 use App\Models\Ressource_Planification_familiale;
 use App\Http\Requests\storeUpdateRessourcePFRequest;
+use App\Http\Controllers\Annotations\GestiondescontenuesAnnotationController;
+
 
 class RessourcePlanificationFamilialeController extends Controller
 {
+    public function __construct()
+    {
+        /**
+         * @GestiondescontenuesAnnotationController
+         */
+    }
+
     /**
      * Display a listing of the resource.
      */

@@ -9,9 +9,17 @@ use App\Models\Dossier_Medical;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Controllers\Annotations\GestiondesmessagesAnnotationController;
 
 class ContacterController extends Controller
 {
+    public function __construct()
+    {
+        /**
+         * @GestiondesmessagesAnnotationController
+         */
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -36,30 +44,29 @@ class ContacterController extends Controller
         
     }
 
-    // Contacter une patiente via WhatSapp
-    public function redirigerWhatsApp($id)
-    {
-        try {
-            if (!is_numeric($id)) {
-                throw new Exception('L\'ID doit être numérique.');
-            }
-            
-            $utilisateur = Dossier_Medical::findOrFail($id);
-            $numeroOriginal = $utilisateur->telephone;
-            
-            if (empty($numeroOriginal)) {
-                throw new Exception("Numéro de téléphone non valide. Numéro original : $numeroOriginal, Numéro nettoyé : $numeroOriginal");
-            }
-            
-            $urlWhatsApp = "https://api.whatsapp.com/send?phone=$numeroOriginal";
-
-            return redirect()->to($urlWhatsApp);
-        } catch (ModelNotFoundException $e) {
-            return redirect()->route('whatsapp.user');
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
+     // Contacter une patiente via WhatSapp
+     public function redirigerWhatsApp($id)
+     {
+         try {
+             if (!is_numeric($id)) {
+                 throw new Exception('L\'ID doit être numérique.');
+                }
+                
+                $utilisateur = Dossier_Medical::findOrFail($id);
+                $numeroOriginal = $utilisateur->telephone;
+             
+             if (empty($numeroOriginal)) {
+                 throw new Exception("Numéro de téléphone non valide. Numéro original : $numeroOriginal, Numéro nettoyé : $numeroOriginal");
+             }
+             $urlWhatsApp = "https://api.whatsapp.com/send?phone=$numeroOriginal";
+ 
+             return redirect()->to($urlWhatsApp);
+         } catch (ModelNotFoundException $e) {
+             return redirect()->route('whatsapp.user');
+         } catch (Exception $e) {
+             return response()->json(['error' => $e->getMessage()], 500);
+         }
+     }
 
     /**
      * Show the form for creating a new resource.

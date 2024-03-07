@@ -24,7 +24,7 @@ class storePersonnelSanteRequest extends FormRequest
     public function rules(): array
     {
         return [
-                'nom' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
+                'nom' => ['required', 'regex:/^[a-zA-Z\s\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
                 'email' => ['required', 'email', 'unique:users,email'],
                 'password' => ['required', 'string','unique:users,password','min:8', 'max:30'],
                 'telephone' => ['required', 'unique:users,telephone','regex:/^(70|75|76|77|78)[0-9]{7}$/'],

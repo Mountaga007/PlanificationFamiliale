@@ -24,7 +24,7 @@ class storeUpdateRessourcePFRequest extends FormRequest
     public function rules(): array
     {
         return [
-        'titre' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
+        'titre' => ['required', 'regex:/^[a-zA-Z\s\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
         'texte' => ['required', 'string', 'min:2', 'max:50'],
         'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif'],
         'document' => ['nullable', 'file', 'mimes:pdf'],

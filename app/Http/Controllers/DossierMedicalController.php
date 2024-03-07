@@ -10,9 +10,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\storeDossierMedicalRequest;
 use App\Http\Requests\storeUpdateDossierMedicalRequest;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Annotations\GestiondesdossiersmdicalpourpersonneldesantAnnotationController;
 
 class DossierMedicalController extends Controller
 {
+  public function __construct(){
+    /**
+     * @GestiondesdossiersmdicalpourpersonneldesantAnnotationController
+     */
+  }
+
     /**
      * Display a listing of the resource.
      */
@@ -360,7 +367,7 @@ public function telechargerDossier($id)
         $dossierMedical = Dossier_Medical::with(['user', 'personnelSante', 'personnelSante.user'])->findOrFail($id);
 
         $user = auth()->user();
-        if ($dossierMedical->personnelsante_id != $user->personnelSante->id) {
+        if ($user->role !== 'admin' && $dossierMedical->personnelsante_id !== $user->personnelSante->id) {
             return response()->json([
                 'code_valide' => 403,
                 'message' => 'Accès non autorisé.',
@@ -368,7 +375,7 @@ public function telechargerDossier($id)
         }
 
         $pdf = PDF::loadView('dossier_medical', compact('dossierMedical'))->setPaper('a4');
-        return $pdf->download('Planification_Familiale.pdf');
+        return $pdf->download('Dossier_Medical.pdf');
     } catch (\Exception $e) {
         return response()->json([
             'code_valide' => 500,

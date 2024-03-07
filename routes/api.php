@@ -64,7 +64,6 @@ Route::middleware(['auth:api', 'role:personnelsante'])->group(function () {
     Route::post('telechargers_DM/{id}', [DossierMedicalController::class, 'telechargerDossier']);
 
     Route::get('whatsapp.user/{id}', [ContacterController::class, 'redirigerWhatsApp']);
-
 });
 
 Route::middleware(['auth:api'])->group(function () {

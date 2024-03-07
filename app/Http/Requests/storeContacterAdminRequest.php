@@ -25,7 +25,7 @@ class storeContacterAdminRequest extends FormRequest
     {
         return [
 
-            'nom' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
+            'nom' => ['required', 'regex:/^[a-zA-Z\s\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
             'email' => ['required', 'email', 'unique:contacters,email'],
             'message' => ['required', 'string', 'min:2', 'max:500'],
         ];

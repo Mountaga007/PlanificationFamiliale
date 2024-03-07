@@ -16,29 +16,24 @@ class AuthentificationUserTest extends TestCase
 
      public function testUserLogin(): void
      {
-         $user = User::factory()->create();
-         $data = [
-             'email' => $user->email,
-             'password' => 'password123',
-         ];
-         $loginuser = $this->post('api/auth/login', $data);
-         $loginuser->assertStatus(200);
+        $response = $this->post('/api/auth/login', [
+            'email' => 'mountaga07@hotmail.com',
+            'password' => 'mountaga007@',
+        ]);
+        $this->assertAuthenticated();
+        $response->assertStatus(200);
      }
 
-    // public function testUserLogout(): void
-    // {
-    //     // Crée un utilisateur valide pour le test
-    //     $user = User::factory()->create();
-    
-    //     // Authentifiez l'utilisateur/Simule l'authentification de l'utilisateur
-    //     $this->actingAs($user); 
-    
-    //     // Envoie une requête de déconnexion
-    //     $response = $this->postJson('api/auth/logout');
-    
-    //     // S'assure que le code d'état est 200
-    //     $response->assertStatus(200);
-    // }
+    public function testUserLogout(): void
+    {
+        $response = $this->post('/api/auth/login', [
+            'email' => 'mountaga07@hotmail.com',
+            'password' => 'mountaga007@',
+        ]); 
+        $response = $this->post('/api/auth/logout');
+        $this->assertGuest();
+        $response->assertStatus(200);
+    }
      
     
 

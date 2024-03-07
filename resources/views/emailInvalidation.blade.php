@@ -62,13 +62,13 @@
                 <div class="col-md-6">
                     
                     <!-- Remplacer src par le chemin de l'image -->
-                    <img src="https://ibb.co/LdtsV8d" class="img-fluid rounded-start" alt="...">
+                    <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Ffr%2Fdiscover%2Ffree-nature-images&psig=AOvVaw2VvI4lbq0LgxeEV_EKHrEP&ust=1709384014075000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKj03OmN04QDFQAAAAAdAAAAABAE" class="img-fluid rounded-start" alt="...">
                 </div>
                 <div class="col-md-6 colAuth rounded-end">
                     <div class="card-body"> 
                         <h3 class="card-title text-center">INVALIDATION DE COMPTE</h3>
                         <div class="text-center">
-                            <img src="https://ibb.co/LdtsV8d" alt="Logo Planification Familiale, DEBBO" class="logo">
+                            <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Ffr%2Fdiscover%2Ffree-nature-images&psig=AOvVaw2VvI4lbq0LgxeEV_EKHrEP&ust=1709384014075000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKj03OmN04QDFQAAAAAdAAAAABAE" alt="Logo Planification Familiale, DEBBO" class="logo">
                         </div>
                             <div>
                                 <p class="fs-5 mt-4">Bonjour {{ $nom }} ,</p>

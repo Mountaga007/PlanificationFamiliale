@@ -8,9 +8,19 @@ use App\Models\Commentaire;
 use App\Models\Forum_Communication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Annotations\GestiondescommentairesAnnotationController;
 
 class CommentaireController extends Controller
 {
+    public function __construct(){
+
+        
+        /**
+         * @GestiondescommentairesAnnotationController
+         */
+    }
+
+
     /**
      * Display a listing of the resource.
      */

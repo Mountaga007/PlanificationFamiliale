@@ -6,9 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\PersonnelSante;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Annotations\AuthentificationAnnotationController;
+
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        /**
+         * @AuthentificationAnnotationController
+         */
+    }
+
     /**
      * Display a listing of the resource.
      */

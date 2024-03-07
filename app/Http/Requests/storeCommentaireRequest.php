@@ -24,7 +24,7 @@ class storeCommentaireRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'texte' => ['required', 'string'],
+            'texte' => ['required', 'regex:/^[a-zA-Z\s\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
         ];
     }
 
@@ -32,7 +32,7 @@ class storeCommentaireRequest extends FormRequest
     {
         return [
             "texte.required" => 'Le texte est requis',
-            "texte.string" => 'Le texte doit être composé de lettres, de chiffres et d\'espaces.',
+            "texte.regex" => 'Le texte doit être composé de lettres, d\'espaces et des caractères spéciaux (au moins 2 caractères)',
         ];
     }
     protected function failedValidation(Validator $validator)

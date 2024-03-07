@@ -24,7 +24,7 @@ class storeUpdateDossierMedicalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'prenom' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
+            'prenom' => ['required', 'regex:/^[a-zA-Z\s\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
             'nom' => ['required', 'regex:/^[a-zA-Z\s\-\'àâäçéèêëîïôöùûüÿæœÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸÆŒ]+$/u', 'min:2', 'max:50'],
             'telephone' => ['required', 'unique:users,telephone','regex:/^(70|75|76|77|78)[0-9]{7}$/'],
             'adresse' => ['required', 'string'],

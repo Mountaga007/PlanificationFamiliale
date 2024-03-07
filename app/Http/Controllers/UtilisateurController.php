@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Controllers\Annotations\GestiondesutilisateursAnnotationController;
 
 class UtilisateurController extends Controller
 {
+    public function __construct()
+    {
+        /**
+         * @GestiondesutilisateursAnnotationController
+         */
+    }
+
     /**
      * Display a listing of the resource.
      */
